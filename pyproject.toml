@@ -1,0 +1,20 @@
+[project]
+requires-python = ">=3.10.5"
+
+[tool.ruff]
+# Set the maximum line length to 79.
+line-length = 80
+include = ["vm/**/*.py"]
+exclude = ["**/.venv/*", "**/generated/*"]
+
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set.
+extend-select = ["E501"]
+
+[tool.pyright]
+typeCheckingMode="standard"
+include = ["**/*.py"]
+exclude = ["**/.venv/*"]
+venvPath = "."
+venv = ".venv"
