@@ -1,0 +1,21 @@
+config:
+  virtual-machine:resource_group_suffix: virtual-machine
+  virtual-machine:location: westus2
+  virtual-machine:vnet_address_prefixes:
+    - "10.0.0.0/16"
+  virtual-machine:subnet_address_prefixes:
+    - "10.0.1.0/24"
+  virtual-machine:add_my_public_ip_to_nsg: true
+  virtual-machine:vm_specs:
+    - admin_username: adminuser
+      admin_password_version: "1"
+      disk_size_gb: 127
+      name:  Win2022Datacenter
+      offer: WindowsServer
+      publisher: MicrosoftWindowsServer
+      server_name: az-204
+      script_path:
+        - ../scripts/powershell/az-204-setup.ps1
+      size: Standard_B2s
+      sku: "2022-datacenter-g2"
+      version: latest
