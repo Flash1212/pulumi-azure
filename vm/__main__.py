@@ -16,6 +16,11 @@ from config import (
     vm_specs,
 )
 
+debug_flag = os.getenv("PULUMI_DEBUG")
+
+if debug_flag:
+    log.info("Debug mode is enabled")
+
 default_tags = {
     "environment": "dev",
     "created_by": "pulumi",
@@ -168,19 +173,18 @@ for vm_spec in vm_specs:
             filename = os.path.basename(script_rel_path)
             sanitized_path = script_rel_path.replace("../", "")
             script_uri = generate_github_raw_url(sanitized_path)
-            log.info(f"Executing script: {script_uri}")
-            azure_native.compute.VirtualMachineExtension(
-                f"{vm_spec.server_name}-{filename}-script",
+            if debug_flag:
+                log.info(f"Executing script: {script_uri}")
+            azure_native.compute.VirtualMachineRunCommandByVirtualMachine(
+                f"{vm_spec.server_name}-{filename}-runcommand",
                 resource_group_name=env_spec.resource_group.name,
                 vm_name=vm.virtual_machine.name,
-                publisher="Microsoft.Compute",
-                type="CustomScriptExtension",
-                type_handler_version="1.10",
-                settings={
-                    "fileUris": [f"{script_uri}"],
-                    "commandToExecute": f"powershell -ExecutionPolicy Unrestricted -File {filename}",
+                location=vm.virtual_machine.location,
+                run_as_password=vm.password.result,
+                run_as_user=vm_spec.admin_username,
+                run_command_name="RunPowerShellScript",
+                source={
+                    "script_uri": script_uri,
                 },
                 opts=ResourceOptions(parent=vm.virtual_machine),
             )
-
-
