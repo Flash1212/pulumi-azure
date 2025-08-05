@@ -76,7 +76,7 @@ class CreateVM(ComponentResource):
             keepers={"version": vm_spec.admin_password_version},
             lower=True,
             upper=True,
-            special=False,
+            special=True,
             numeric=True,
             opts=self.opts,
         )

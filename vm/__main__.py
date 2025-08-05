@@ -178,9 +178,7 @@ for vm_spec in vm_specs:
                 type_handler_version="1.10",
                 settings={
                     "fileUris": [f"{script_uri}"],
-                    "commandToExecute": f"powershell -ExecutionPolicy Unrestricted -File {filename}",
+                    "commandToExecute": f"powershell -ExecutionPolicy Unrestricted -File {filename}",  # noqa: E501
                 },
                 opts=ResourceOptions(parent=vm.virtual_machine),
             )
-
-
