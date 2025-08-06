@@ -13,9 +13,23 @@ config:
       name:  Win2022Datacenter
       offer: WindowsServer
       publisher: MicrosoftWindowsServer
-      server_name: az-204
+      server_name: az-204-win2022
       script_path:
         - ../scripts/powershell/az-204-setup.ps1
       size: Standard_B2s
       sku: "2022-datacenter-g2"
+      os_type: windows
+      version: latest
+    - admin_username: adminuser
+      admin_password_version: "1"
+      disk_size_gb: 127
+      name:  Ubuntu2204
+      offer: 0001-com-ubuntu-server-jammy
+      publisher: Canonical
+      server_name: az-204-ubuntu2204
+      script_path:
+        - ../scripts/bash/az-204-setup.sh
+      size: Standard_B2s
+      sku: 22_04-lts-gen2
+      os_type: linux
       version: latest

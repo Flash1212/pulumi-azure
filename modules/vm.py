@@ -1,5 +1,6 @@
-from typing import NamedTuple, Optional
-from attr import dataclass
+from typing import Optional
+from attr import dataclass, field
+import re
 from pulumi import ComponentResource, ResourceOptions
 import pulumi_azure_native as azure_native
 from pulumi_random import RandomPassword
@@ -13,7 +14,8 @@ class EnvironmentSpecs:
     tags: Optional[dict] = None
 
 
-class VMSpecs(NamedTuple):
+@dataclass
+class VMSpecs:
     admin_username: str
     admin_password_version: str
     disk_size_gb: int
@@ -23,8 +25,15 @@ class VMSpecs(NamedTuple):
     server_name: str
     size: str
     sku: str
+    os_type: str
     version: str
-    script_path: Optional[list[str]] = []
+    script_path: Optional[list[str]] = field(factory=list)
+
+    def __attrs_post_init__(self):
+        if not re.match(r"^[A-Za-z0-9\-]+$", self.server_name):
+            raise ValueError(
+                f"server_name '{self.server_name}' contains invalid characters. Only letters, numbers, and hyphens are allowed."  # noqa: E501
+            )
 
 
 class CreateVM(ComponentResource):
@@ -77,6 +86,7 @@ class CreateVM(ComponentResource):
             lower=True,
             upper=True,
             special=True,
+            override_special="!#%^*_+=-./?~",
             numeric=True,
             opts=self.opts,
         )
