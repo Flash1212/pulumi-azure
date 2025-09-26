@@ -1,16 +1,21 @@
 from typing import Optional
 from attr import dataclass, field
 import re
+
 from pulumi import ComponentResource, ResourceOptions
-import pulumi_azure_native as azure_native
+from pulumi_azure_native import (
+    compute as az_compute,
+    network as az_network,
+    resources as az_resources,
+)
 from pulumi_random import RandomPassword
 
 
 @dataclass
 class EnvironmentSpecs:
-    resource_group: azure_native.resources.ResourceGroup
-    vnet: azure_native.network.VirtualNetwork
-    subnet: azure_native.network.Subnet
+    resource_group: az_resources.ResourceGroup
+    vnet: az_network.VirtualNetwork
+    subnet: az_network.Subnet
     tags: Optional[dict] = None
 
 
@@ -36,7 +41,7 @@ class VMSpecs:
             )
 
 
-class CreateVM(ComponentResource):
+class VM(ComponentResource):
     """
     Create a Virtual Machine with specified configurations.
     """
@@ -48,11 +53,11 @@ class CreateVM(ComponentResource):
         env_spec: EnvironmentSpecs,
         opts: ResourceOptions,
     ):
-        super().__init__("flash1212:vm:CreateVM", name, None, opts)
+        super().__init__("flash1212:compute:VM", name, None, opts)
 
         self.opts = ResourceOptions.merge(opts, ResourceOptions(parent=self))
 
-        self.public_ip = azure_native.network.PublicIPAddress(
+        self.public_ip = az_network.PublicIPAddress(
             f"{vm_spec.server_name}-public-ip",
             resource_group_name=env_spec.resource_group.name,
             public_ip_allocation_method="Dynamic",
@@ -60,17 +65,17 @@ class CreateVM(ComponentResource):
             tags=env_spec.tags,
         )
 
-        self.network_interface = azure_native.network.NetworkInterface(
+        self.network_interface = az_network.NetworkInterface(
             f"{vm_spec.server_name}-nic",
             resource_group_name=env_spec.resource_group.name,
             ip_configurations=[
-                azure_native.network.NetworkInterfaceIPConfigurationArgs(
+                az_network.NetworkInterfaceIPConfigurationArgs(
                     name=f"{vm_spec.server_name}-ipconfig",
-                    subnet=azure_native.network.SubnetArgs(
+                    subnet=az_network.SubnetArgs(
                         id=env_spec.subnet.id,
                     ),
                     private_ip_allocation_method="Dynamic",
-                    public_ip_address=azure_native.network.PublicIPAddressArgs(
+                    public_ip_address=az_network.PublicIPAddressArgs(
                         id=self.public_ip.id,
                     ),
                 )
@@ -91,35 +96,35 @@ class CreateVM(ComponentResource):
             opts=self.opts,
         )
 
-        self.virtual_machine = azure_native.compute.VirtualMachine(
+        self.virtual_machine = az_compute.VirtualMachine(
             f"{vm_spec.server_name}-vm",
             resource_group_name=env_spec.resource_group.name,
-            network_profile=azure_native.compute.NetworkProfileArgs(
+            network_profile=az_compute.NetworkProfileArgs(
                 network_interfaces=[
-                    azure_native.compute.NetworkInterfaceReferenceArgs(
+                    az_compute.NetworkInterfaceReferenceArgs(
                         id=self.network_interface.id,
                         primary=True,
                     )
                 ]
             ),
-            hardware_profile=azure_native.compute.HardwareProfileArgs(
+            hardware_profile=az_compute.HardwareProfileArgs(
                 vm_size=vm_spec.size,
             ),
-            os_profile=azure_native.compute.OSProfileArgs(
+            os_profile=az_compute.OSProfileArgs(
                 computer_name=vm_spec.server_name,
                 admin_username=vm_spec.admin_username,
                 admin_password=self.password.result,
             ),
-            storage_profile=azure_native.compute.StorageProfileArgs(
-                os_disk=azure_native.compute.OSDiskArgs(
+            storage_profile=az_compute.StorageProfileArgs(
+                os_disk=az_compute.OSDiskArgs(
                     name=f"{vm_spec.server_name}-os-disk",
-                    caching=azure_native.compute.CachingTypes.READ_WRITE,
-                    create_option=azure_native.compute.DiskCreateOption.FROM_IMAGE,
-                    managed_disk=azure_native.compute.ManagedDiskParametersArgs(
-                        storage_account_type=azure_native.compute.StorageAccountTypes.STANDARD_LRS,
+                    caching=az_compute.CachingTypes.READ_WRITE,
+                    create_option=az_compute.DiskCreateOption.FROM_IMAGE,
+                    managed_disk=az_compute.ManagedDiskParametersArgs(
+                        storage_account_type=az_compute.StorageAccountTypes.STANDARD_LRS,
                     ),
                 ),
-                image_reference=azure_native.compute.ImageReferenceArgs(
+                image_reference=az_compute.ImageReferenceArgs(
                     publisher=vm_spec.publisher,
                     offer=vm_spec.offer,
                     sku=vm_spec.sku,

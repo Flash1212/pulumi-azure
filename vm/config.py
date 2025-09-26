@@ -1,4 +1,4 @@
-from modules.vm import VMSpecs
+from modules.compute import VMSpecs
 import pulumi
 
 config = pulumi.Config()

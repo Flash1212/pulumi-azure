@@ -6,7 +6,7 @@ import subprocess
 
 from pulumi import export, log, ResourceOptions
 import pulumi_azure_native as azure_native
-from modules.vm import CreateVM, EnvironmentSpecs, VMSpecs
+from modules.compute import VM, EnvironmentSpecs, VMSpecs
 from config import (
     add_my_public_ip_to_nsg,
     azure_location,
@@ -188,7 +188,7 @@ env_spec = EnvironmentSpecs(
 
 vms = []
 for vm_spec in vm_specs:
-    vm = CreateVM(
+    vm = VM(
         name=vm_spec.server_name,
         vm_spec=vm_spec,
         env_spec=env_spec,
@@ -211,23 +211,26 @@ for vm_spec in vm_specs:
         if os.path.exists(
             os.path.join(os.path.dirname(__file__), script_rel_path)
         ):
-
             filename = os.path.basename(script_rel_path)
             sanitized_path = script_rel_path.replace("../", "")
             script_uri = generate_github_raw_url(sanitized_path)
             if DEBUG:
                 log.info(f"Executing script: {script_uri}")
 
-            publisher:str
+            publisher: str
             type_: str
             type_handler_version: str
             if vm_spec.os_type.lower() == "windows":
-                command_to_execute = f"powershell -ExecutionPolicy Unrestricted -File {filename}"
+                command_to_execute = (
+                    f"powershell -ExecutionPolicy Unrestricted -File {filename}"
+                )
                 publisher = "Microsoft.Compute"
                 type_ = "CustomScriptExtension"
                 type_handler_version = "1.10"
             elif vm_spec.os_type.lower() == "linux":
-                command_to_execute = f"bash --noprofile --norc -eo pipefail {filename}"
+                command_to_execute = (
+                    f"bash --noprofile --norc -eo pipefail {filename}"
+                )
                 publisher = "Microsoft.Azure.Extensions"
                 type_ = "CustomScript"
                 type_handler_version = "2.1"
