@@ -1,0 +1,7 @@
+config:
+  azure-native:location: eastus2
+  azure-native:subscriptionId: 897cf406-9dc2-4bb6-90a1-89243710ee08
+  azure-native:useDefaultAzureCredential: "true"
+  function-apps:resource-group-prefix: flashy-app
+  function-apps:app_svc_plan_name: az-204-flashyApps
+  function-apps:func_app_name: helloapp

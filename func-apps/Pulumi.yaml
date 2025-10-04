@@ -1,0 +1,5 @@
+name: function-apps
+description: An Azure Native Python Pulumi program for creating app function resources
+runtime:
+  name: python
+
