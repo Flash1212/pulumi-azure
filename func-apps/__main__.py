@@ -18,6 +18,7 @@ from pulumi_azuread import get_client_config
 from pulumi_azure_native import (
     applicationinsights,
     authorization,
+    eventgrid,
     managedidentity,
     operationalinsights,
     resources,
@@ -82,7 +83,6 @@ storage = StorageChain(
     opts=default_opts,
 )
 
-
 ### Create Log Analytics workspace
 log_analytics = operationalinsights.Workspace(
     resource_name=f"{resource_prefix}-workspace",
@@ -103,6 +103,20 @@ app_insights = applicationinsights.Component(
     location=location,
     resource_group_name=resource_group.name,
     workspace_resource_id=log_analytics.id,
+    tags=default_tags,
+    opts=default_opts,
+)
+
+### Create Event Grid Topic
+event_grid_topic = eventgrid.Topic(
+    resource_name=f"{resource_prefix}-event-topic",
+    data_residency_boundary=eventgrid.DataResidencyBoundary.WITHIN_REGION,
+    input_schema=eventgrid.InputSchema.EVENT_GRID_SCHEMA,
+    location=location,
+    public_network_access=eventgrid.PublicNetworkAccess.ENABLED,
+    minimum_tls_version_allowed=eventgrid.TlsVersion.TLS_VERSION_1_2,
+    resource_group_name=resource_group.name,
+    tags=default_tags,
     opts=default_opts,
 )
 
@@ -120,26 +134,43 @@ roles_assignments = [
         "role_name": "Storage Blob Data Owner",
         "role_id": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
         "scope": storage.storage_account.id,
+        "name_postfix": "Storage",
     },
     {
         "role_name": "Storage Blob Data Contributor",
         "role_id": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
         "scope": storage.storage_account.id,
+        "name_postfix": "Storage",
     },
     {
         "role_name": "Storage Queue Data Contributor",
         "role_id": "974c5e8b-45b9-4653-ba55-5f855dd0fb88",
         "scope": storage.storage_account.id,
+        "name_postfix": "Storage",
     },
     {
         "role_name": "Storage Table Data Contributor",
         "role_id": "0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3",
         "scope": storage.storage_account.id,
+        "name_postfix": "Storage",
     },
     {
         "role_name": "Monitoring Metrics Publisher",
         "role_id": "3913510d-42f4-4e42-8a64-420c390055eb",
         "scope": app_insights.id,
+        "name_postfix": "AppInsights" ,
+    },
+    {
+        "role_name": "EventGrid Data Sender",
+        "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
+        "scope": event_grid_topic.id,
+        "name_postfix": "EvntGrid",
+    },
+    {
+        "role_name": "EventGrid Data Sender",
+        "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
+        "scope": storage.storage_account.id,
+        "name_postfix": "Storage",
     },
 ]
 
@@ -147,7 +178,7 @@ for assignment in roles_assignments:
     role_defintion_id = f"/subscription/{subscription_id}/providers/Microsoft.Authorization/roleDefinitions/{assignment['role_id']}"
     # Managed Identity
     authorization.RoleAssignment(
-        resource_name=f"Managed{assignment['role_name'].replace(' ', '')}",
+        resource_name=f"Managed{assignment['role_name'].replace(' ', '')}{assignment['name_postfix']}",
         scope=assignment["scope"],
         role_definition_id=role_defintion_id,
         principal_id=assigned_identity.principal_id,
@@ -156,14 +187,13 @@ for assignment in roles_assignments:
     )
     # Creator
     authorization.RoleAssignment(
-        resource_name=f"User{assignment['role_name'].replace(' ', '')}",
+        resource_name=f"User{assignment['role_name'].replace(' ', '')}{assignment['name_postfix']}",
         scope=assignment["scope"],
         role_definition_id=role_defintion_id,
         principal_id=get_client_config().object_id,
         principal_type=authorization.PrincipalType.USER,
         opts=ResourceOptions(parent=storage.storage_account),
     )
-
 
 ### Create App Service Plan
 app_svc_plan = web.AppServicePlan(
@@ -236,12 +266,19 @@ func_app = web.WebApp(
                     ";Authorization=AAD",
                 ),
             ),
+            web.NameValuePairArgs(
+                name="FlashyEventGrid__topicEndpointUri",
+                value=event_grid_topic.endpoint,
+            ),
+            web.NameValuePairArgs(
+                name="FlashyEventGrid__credential", value="managedidentity"
+            ),
+            web.NameValuePairArgs(
+                name="FlashyEventGrid__clientId",
+                value=assigned_identity.client_id,
+            ),
         ],
-        cors=web.CorsSettingsArgs(
-            allowed_origins=[
-                "https://portal.azure.com"
-            ]
-        ),
+        cors=web.CorsSettingsArgs(allowed_origins=["https://portal.azure.com"]),
         min_tls_version=web.SupportedTlsVersions.SUPPORTED_TLS_VERSIONS_1_2,
     ),
     tags={
@@ -258,3 +295,5 @@ export("blob_container_url", storage.storage_blob_container_url)
 export("connection_string", storage.storage_connection_string)
 export("storage_account_keys", storage.storage_account_keys)
 export("queue_name", storage.storage_queue.name)
+export("eventgrid_topic_endpoint", event_grid_topic.endpoint)
+export("manage_user_client_id", assigned_identity.client_id)
