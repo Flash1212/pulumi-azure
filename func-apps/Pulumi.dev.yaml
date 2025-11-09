@@ -1,7 +1,21 @@
 config:
-  azure-native:location: eastus2
+  azure-native:location: centralus
   azure-native:subscriptionId: 897cf406-9dc2-4bb6-90a1-89243710ee08
   azure-native:useDefaultAzureCredential: "true"
-  function-apps:resource-group-prefix: flashy-app
+  # Resource creation toggles
+  function-apps:create_app_insights: true
+  function-apps:create_event_grid: false
+  function-apps:create_function_app: true
+  function-apps:create_key_vault: true
+  function-apps:create_log_analytics: false
+  function-apps:create_storage_account: true
+  # Resource names and settings
   function-apps:app_svc_plan_name: az-204-flashyApps
+  function-apps:blob_names: []
   function-apps:func_app_name: helloapp
+  function-apps:resource-group-prefix: flashy-app
+  function-apps:queue_names: []
+  # Function App Settings
+  function-apps:func_runtime_args:
+      name: "dotnet-isolated"
+      version: "8.0"

@@ -1,4 +1,4 @@
-from pulumi import ComponentResource, Output, ResourceOptions
+from pulumi import ComponentResource, InvokeOptions, Output, ResourceOptions
 from pulumi_azure_native import storage
 from attr import dataclass, field
 from typing import Optional
@@ -13,14 +13,20 @@ class CosmosDBArgs:
 
 
 @dataclass
+class StorageComponentArgs:
+    name: str
+    args: dict
+
+
+@dataclass
 class StorageArgs:
-    resource_prefix: str
     resource_group_name: Output[str]
-    storage_account_args: dict
+    storage_account_args: StorageComponentArgs
     tags: dict = field(factory=dict)
-    storage_blob_properties_args: Optional[dict] = None
-    storage_blob_container_args: Optional[dict] = None
-    storage_queue_args: Optional[dict] = None
+    storage_blob_container_args: Optional[list[StorageComponentArgs]] = None
+    storage_blob_properties_args: Optional[StorageComponentArgs] = None
+    storage_container_sas_args: Optional[list[StorageComponentArgs]] = None
+    storage_queue_args: Optional[list[StorageComponentArgs]] = None
 
 
 class StorageAccountDefaults:
@@ -63,10 +69,14 @@ class StorageChain(ComponentResource):
         super().__init__("flash1212:storage:StorageChain", name, None, opts)
 
         self.opts = ResourceOptions.merge(opts, ResourceOptions(parent=self))
+        self.storage_blob_svc_props = None
+        self.storage_blob_containers: dict[str, storage.BlobContainer] = {}
+        self.storage_queues: dict[str, storage.Queue] = {}
+        self.storage_sas_urls: dict[str, Output[dict[str, Output[str]]]] = {}
 
         self.storage_account = storage.StorageAccount(
-            resource_name=f"{args.resource_prefix}storacct",
-            **args.storage_account_args,
+            resource_name=args.storage_account_args.name,
+            **args.storage_account_args.args,
             opts=self.opts,
         )
         self.__get_keys_and_string(
@@ -76,42 +86,67 @@ class StorageChain(ComponentResource):
 
         if args.storage_blob_properties_args:
             self.storage_blob_svc_props = storage.BlobServiceProperties(
-                resource_name=f"{args.resource_prefix}-blob-props",
+                resource_name=args.storage_blob_properties_args.name,
                 **{
-                    **args.storage_blob_properties_args,
+                    **args.storage_blob_properties_args.args,
                     "account_name": self.storage_account.name,
                 },
                 opts=ResourceOptions(parent=self.storage_account),
             )
 
         if args.storage_blob_container_args:
-            self.storage_blob_container = storage.BlobContainer(
-                resource_name=f"{args.resource_prefix}-container",
-                **{
-                    **args.storage_blob_container_args,
-                    "account_name": self.storage_account.name,
-                },
-                opts=ResourceOptions(
-                    parent=self.storage_blob_svc_props
-                    if self.storage_blob_svc_props
-                    else self.storage_account
-                ),
-            )
+            for container in args.storage_blob_container_args:
+                self.storage_blob_containers[container.name] = (
+                    storage.BlobContainer(
+                        resource_name=container.name,
+                        **{
+                            **container.args,
+                            "account_name": self.storage_account.name,
+                        },
+                        opts=ResourceOptions(
+                            parent=self.storage_blob_svc_props
+                            if self.storage_blob_svc_props
+                            else self.storage_account
+                        ),
+                    )
+                )
 
-            self.storage_blob_container_url = Output.concat(
-                self.storage_account.primary_endpoints.blob,
-                self.storage_blob_container.name,
-            )
+        if args.storage_container_sas_args:
+            for sas in args.storage_container_sas_args:
+                sas_token_result = (
+                    storage.list_storage_account_service_sas_output(
+                        **{
+                            **sas.args,
+                            "account_name": self.storage_account.name,
+                        },
+                        opts=InvokeOptions(parent=self.storage_account),
+                    )
+                )
+                sas_token = sas_token_result.apply(
+                    lambda r: r.service_sas_token
+                )
+                self.storage_sas_urls[sas.name] = Output.secret(
+                    {
+                        "blob_sas_url": Output.concat(
+                            self.storage_account.primary_endpoints.blob,
+                            sas.name,
+                            "?",
+                            sas_token,
+                        ),
+                        "blob_sas_token_only": sas_token,
+                    }
+                )
 
         if args.storage_queue_args:
-            self.storage_queue = storage.Queue(
-                resource_name=f"{args.resource_prefix}-queue",
-                **{
-                    **args.storage_queue_args,
-                    "account_name": self.storage_account.name,
-                },
-                opts=ResourceOptions(parent=self.storage_account),
-            )
+            for queue in args.storage_queue_args:
+                self.storage_queues[queue.name] = storage.Queue(
+                    resource_name=queue.name,
+                    **{
+                        **queue.args,
+                        "account_name": self.storage_account.name,
+                    },
+                    opts=ResourceOptions(parent=self.storage_account),
+                )
 
         self.register_outputs({})
 

@@ -1,19 +1,27 @@
 # __main__.py
 """
-Pulumi program to create Azure App Functions
+Pulumi program to create an uber Azure App Function
 """
 
-from typing import Type
 import modulepath_fixer  # noqa: F401
+from typing import Type
 
 from configs import (
     app_svc_plan_name,
+    create_app_insights,
+    create_event_grid,
+    create_function_app,
+    create_log_analytics,
+    create_storage_account,
+    blob_names,
     func_app_name,
+    func_runtime_args,
     location,
+    queue_names,
     resource_group_prefix,
     subscription_id,
 )
-from pulumi import export, Output, ResourceOptions
+from pulumi import export, Input, Output, ResourceOptions
 from pulumi_azuread import get_client_config
 from pulumi_azure_native import (
     applicationinsights,
@@ -26,274 +34,568 @@ from pulumi_azure_native import (
     web,
 )
 
+from local_dataclasses import (
+    AnalyticsAndLogsOutputs,
+    IdentityOutput,
+    StorageOutputs,
+)
+
 from modules.storage import (
     StorageChain,
     StorageArgs,
     StorageAccountDefaults,
+    StorageComponentArgs,
 )
-
-
-def get_defaults(storage_defaults_class: Type[StorageAccountDefaults]) -> dict:
-    return {
-        k: v
-        for k, v in vars(storage_defaults_class).items()
-        if not k.startswith("__") and not callable(v)
-    }
-
 
 ### Setup Resource Group
 resource_group = resources.ResourceGroup(f"{resource_group_prefix}-{location}")
 default_opts = ResourceOptions(parent=resource_group)
 default_tags = {"purpose": "az-204", "app": func_app_name}
 resource_prefix = "funcapp"
-
-### Setup Storage
-storage_name = f"{resource_prefix}storacct"
-
-storage_account_args = {
-    **get_defaults(StorageAccountDefaults),
-    "location": location,
-    "resource_group_name": resource_group.name,
-}
-
-storage_blob_svc_props_args = {
-    "blob_services_name": "default",
-    "delete_retention_policy": {},
-    "resource_group_name": resource_group.name,
-}
-
-storage_blob_container_args = {
-    "public_access": storage.PublicAccess.NONE,
-    "resource_group_name": resource_group.name,
-}
-
-storage_queue_args = {"resource_group_name": resource_group.name}
-
-storage = StorageChain(
-    name=resource_prefix,
-    args=StorageArgs(
-        resource_prefix=resource_prefix,
-        resource_group_name=resource_group.name,
-        storage_account_args=storage_account_args,
-        storage_blob_properties_args=storage_blob_svc_props_args,
-        storage_blob_container_args=storage_blob_container_args,
-        storage_queue_args=storage_queue_args,
-        tags=default_tags,
-    ),
-    opts=default_opts,
-)
-
-### Create Log Analytics workspace
-log_analytics = operationalinsights.Workspace(
-    resource_name=f"{resource_prefix}-workspace",
-    location=location,
-    resource_group_name=resource_group.name,
-    retention_in_days=30,
-    sku=operationalinsights.WorkspaceSkuArgs(name="PerGB2018"),
-    tags=default_tags,
-    opts=default_opts,
-)
-
-### Create Application Insights
-app_insights = applicationinsights.Component(
-    resource_name=f"{resource_prefix}-insights",
-    application_type="web",
-    disable_local_auth=True,
-    kind="web",
-    location=location,
-    resource_group_name=resource_group.name,
-    workspace_resource_id=log_analytics.id,
-    tags=default_tags,
-    opts=default_opts,
-)
-
-### Create Event Grid Topic
-event_grid_topic = eventgrid.Topic(
-    resource_name=f"{resource_prefix}-event-topic",
-    data_residency_boundary=eventgrid.DataResidencyBoundary.WITHIN_REGION,
-    input_schema=eventgrid.InputSchema.EVENT_GRID_SCHEMA,
-    location=location,
-    public_network_access=eventgrid.PublicNetworkAccess.ENABLED,
-    minimum_tls_version_allowed=eventgrid.TlsVersion.TLS_VERSION_1_2,
-    resource_group_name=resource_group.name,
-    tags=default_tags,
-    opts=default_opts,
-)
-
-### Create User assigned identity and assign role
-assigned_identity = managedidentity.UserAssignedIdentity(
-    f"{resource_prefix}-identity",
-    location=location,
-    resource_group_name=resource_group.name,
-    tags={"storageAccount": storage.storage_account.name},
-    opts=ResourceOptions(parent=storage.storage_account),
-)
-
-roles_assignments = [
-    {
-        "role_name": "Storage Blob Data Owner",
-        "role_id": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
-        "scope": storage.storage_account.id,
-        "name_postfix": "Storage",
-    },
-    {
-        "role_name": "Storage Blob Data Contributor",
-        "role_id": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
-        "scope": storage.storage_account.id,
-        "name_postfix": "Storage",
-    },
-    {
-        "role_name": "Storage Queue Data Contributor",
-        "role_id": "974c5e8b-45b9-4653-ba55-5f855dd0fb88",
-        "scope": storage.storage_account.id,
-        "name_postfix": "Storage",
-    },
-    {
-        "role_name": "Storage Table Data Contributor",
-        "role_id": "0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3",
-        "scope": storage.storage_account.id,
-        "name_postfix": "Storage",
-    },
-    {
-        "role_name": "Monitoring Metrics Publisher",
-        "role_id": "3913510d-42f4-4e42-8a64-420c390055eb",
-        "scope": app_insights.id,
-        "name_postfix": "AppInsights" ,
-    },
-    {
-        "role_name": "EventGrid Data Sender",
-        "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
-        "scope": event_grid_topic.id,
-        "name_postfix": "EvntGrid",
-    },
-    {
-        "role_name": "EventGrid Data Sender",
-        "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
-        "scope": storage.storage_account.id,
-        "name_postfix": "Storage",
-    },
+identities: list[IdentityOutput] = [
+    IdentityOutput(
+        principal_id=get_client_config().object_id,
+        parent=resource_group,
+        type=authorization.PrincipalType.USER,
+    )
 ]
 
-for assignment in roles_assignments:
-    role_defintion_id = f"/subscription/{subscription_id}/providers/Microsoft.Authorization/roleDefinitions/{assignment['role_id']}"
-    # Managed Identity
-    authorization.RoleAssignment(
-        resource_name=f"Managed{assignment['role_name'].replace(' ', '')}{assignment['name_postfix']}",
-        scope=assignment["scope"],
-        role_definition_id=role_defintion_id,
+
+
+def define_role_assignments(
+    app_insights: applicationinsights.Component | None,
+    storage_outputs: StorageOutputs | None,
+    event_grid_topic: eventgrid.Topic | None,
+) -> list[dict]:
+    role_assignments = []
+
+    if storage_outputs:
+        if storage_outputs.storage_blob_endpoints:
+            role_assignments.extend(
+                [
+                    {
+                        "role_name": "Storage Blob Data Owner",
+                        "role_id": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+                        "scope": storage_outputs.storage_chain.storage_account.id,
+                        "name_postfix": "Storage",
+                    },
+                    {
+                        "role_name": "Storage Blob Data Contributor",
+                        "role_id": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+                        "scope": storage_outputs.storage_chain.storage_account.id,
+                        "name_postfix": "Storage",
+                    },
+                ]
+            )
+        if storage_outputs.storage_queue_endpoints:
+            role_assignments.append(
+                {
+                    "role_name": "Storage Queue Data Contributor",
+                    "role_id": "974c5e8b-45b9-4653-ba55-5f855dd0fb88",
+                    "scope": storage_outputs.storage_chain.storage_account.id,
+                    "name_postfix": "Storage",
+                },
+            )
+
+    if app_insights:
+        role_assignments.append(
+            {
+                "role_name": "Monitoring Metrics Publisher",
+                "role_id": "3913510d-42f4-4e42-8a64-420c390055eb",
+                "scope": app_insights.id,
+                "name_postfix": "AppInsights",
+            },
+        )
+
+    if isinstance(event_grid_topic, eventgrid.Topic):
+        role_assignments.append(
+            {
+                "role_name": "EventGrid Data Sender",
+                "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
+                "scope": event_grid_topic.id,
+                "name_postfix": "EvntGrid",
+            }
+        )
+        if storage_outputs:
+            role_assignments.append(
+                {
+                    "role_name": "EventGrid Data Sender",
+                    "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
+                    "scope": storage_outputs.storage_chain.storage_account.id,
+                    "name_postfix": "Storage",
+                }
+            )
+    return role_assignments
+
+
+def define_app_settings(
+    assigned_identity: managedidentity.UserAssignedIdentity,
+    storage_outputs: StorageOutputs | None,
+    analytics_and_logs: AnalyticsAndLogsOutputs | None,
+    event_grid_topic: eventgrid.Topic | None,
+) -> dict[str, Input[str]]:
+    app_settings = {}
+
+    if analytics_and_logs and analytics_and_logs.app_insights:
+        app_settings["APPINSIGHTS_INSTRUMENTATIONKEY"] = (
+            analytics_and_logs.app_insights.instrumentation_key
+        )
+        app_settings["APPLICATIONINSIGHTS_AUTHENTICATION_STRING"] = (
+            Output.concat(
+                "ClientId=",
+                assigned_identity.client_id,
+                ";Authorization=AAD",
+            )
+        )
+    if isinstance(event_grid_topic, eventgrid.Topic):
+        app_settings["FlashyEventGrid__topicEndpointUri"] = (
+            event_grid_topic.endpoint
+        )
+        app_settings["FlashyEventGrid__credential"] = "managedidentity"
+        app_settings["FlashyEventGrid__clientId"] = assigned_identity.client_id
+    if storage_outputs:
+        app_settings["AzureWebJobsStorage__accountName"] = (
+            storage_outputs.storage_chain.storage_account.name
+        )
+        app_settings["AzureWebJobsStorage__credential"] = "managedidentity"
+        app_settings["AzureWebJobsStorage__clientId"] = (
+            assigned_identity.client_id
+        )
+
+    return app_settings
+
+
+def setup_anlytics_and_insights(
+    create_log_analytics: bool,
+    create_app_insights: bool,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    resource_group_name: Output[str],
+    prefix: str,
+) -> AnalyticsAndLogsOutputs | None:
+    if not create_log_analytics and not create_app_insights:
+        return None
+
+    log_analytics = operationalinsights.Workspace(
+        resource_name=f"{prefix}-workspace",
+        location=location,
+        resource_group_name=resource_group_name,
+        retention_in_days=30,
+        sku=operationalinsights.WorkspaceSkuArgs(name="PerGB2018"),
+        tags=default_tags,
+        opts=default_opts,
+    )
+
+    app_insights = (
+        applicationinsights.Component(
+            resource_name=f"{prefix}-insights",
+            application_type="web",
+            disable_local_auth=True,
+            kind="web",
+            location=location,
+            resource_group_name=resource_group_name,
+            workspace_resource_id=log_analytics.id,
+            tags=default_tags,
+            opts=default_opts,
+        )
+        if create_app_insights
+        else None
+    )
+    return AnalyticsAndLogsOutputs(
+        log_analytics=log_analytics, app_insights=app_insights
+    )
+
+
+def setup_assigned_identity(
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    location: str,
+    prefix: str,
+    resource_group_name: Output[str],
+) -> managedidentity.UserAssignedIdentity:
+    assigned_identity = managedidentity.UserAssignedIdentity(
+        f"{prefix}-identity",
+        location=location,
+        resource_group_name=resource_group_name,
+        tags=default_tags,
+        opts=default_opts,
+    )
+
+    export("managed_user_client_id", assigned_identity.client_id)
+    return assigned_identity
+
+
+def setup_event_grid(
+    create_event_grid: bool,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    location: str,
+    resource_group_name: Output[str],
+    prefix: str,
+) -> eventgrid.Topic | None:
+    if not create_event_grid:
+        return None
+
+    event_grid_topic = eventgrid.Topic(
+        resource_name=f"{prefix}-event-topic",
+        data_residency_boundary=eventgrid.DataResidencyBoundary.WITHIN_REGION,
+        input_schema=eventgrid.InputSchema.EVENT_GRID_SCHEMA,
+        location=location,
+        public_network_access=eventgrid.PublicNetworkAccess.ENABLED,
+        minimum_tls_version_allowed=eventgrid.TlsVersion.TLS_VERSION_1_2,
+        resource_group_name=resource_group_name,
+        tags=default_tags,
+        opts=default_opts,
+    )
+    export("eventgrid_topic_endpoint", event_grid_topic.endpoint)
+
+    return event_grid_topic
+
+
+def setup_roles(
+    name: str,
+    identities: list[IdentityOutput],
+    role_id: str,
+    subscription_id: str,
+    scope: str,
+):
+    role_definition_id = (
+        f"/subscription/{subscription_id}/providers/Microsoft.Authorization/"
+        f"roleDefinitions/{role_id}"
+    )
+
+    for i, identity in enumerate(identities):
+        if identity.type == authorization.PrincipalType.SERVICE_PRINCIPAL:
+            name = f"Managed{name}-{i}"
+        if identity.type == authorization.PrincipalType.USER:
+            name = f"User{name}-{i}"
+
+        authorization.RoleAssignment(
+            resource_name=name,
+            principal_id=identity.principal_id,
+            principal_type=identity.type,
+            role_definition_id=role_definition_id,
+            scope=scope,
+            opts=ResourceOptions(parent=identity.parent),
+        )
+
+
+def setup_storage(
+    create: bool,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    resource_group_name: Output[str],
+    prefix: str,
+) -> StorageOutputs | None:
+    if not create:
+        return None
+
+    def get_defaults(
+        storage_defaults_class: Type[StorageAccountDefaults],
+    ) -> dict:
+        return {
+            k: v
+            for k, v in vars(storage_defaults_class).items()
+            if not k.startswith("__") and not callable(v)
+        }
+
+    storage_account_args = StorageComponentArgs(
+        name=f"{prefix}storacct",
+        args={
+            **get_defaults(StorageAccountDefaults),
+            "location": location,
+            "resource_group_name": resource_group.name,
+        },
+    )
+
+    storage_blob_svc_props_args = StorageComponentArgs(
+        name=f"{prefix}-blob-props",
+        args={
+            "blob_services_name": "default",
+            "delete_retention_policy": {},
+            "resource_group_name": resource_group.name,
+        },
+    )
+
+    if create_function_app:
+        blob_names.append(prefix)
+
+    storage_blob_container_args = [
+        StorageComponentArgs(
+            name=name,
+            args={
+                "public_access": storage.PublicAccess.NONE,
+                "resource_group_name": resource_group.name,
+            },
+        )
+        for name in blob_names
+    ]
+
+    storage_queue_args = [
+        StorageComponentArgs(
+            name=name,
+            args={"resource_group_name": resource_group.name},
+        )
+        for name in queue_names
+    ]
+
+    storage_chain = StorageChain(
+        name=prefix,
+        args=StorageArgs(
+            resource_group_name=resource_group_name,
+            storage_account_args=storage_account_args,
+            storage_blob_properties_args=storage_blob_svc_props_args,
+            storage_blob_container_args=storage_blob_container_args,
+            storage_queue_args=storage_queue_args,
+            tags=default_tags,
+        ),
+        opts=default_opts,
+    )
+
+    storage_blob_endpoints = {
+        name: Output.concat(
+            storage_chain.storage_account.primary_endpoints.blob,
+            container.name,
+        )
+        for name, container in storage_chain.storage_blob_containers.items()
+    }
+    storage_queue_endpoints = {
+        name: Output.concat(
+            storage_chain.storage_account.primary_endpoints.queue,
+            queue.name,
+        )
+        for name, queue in storage_chain.storage_queues.items()
+    }
+    export("blob_container_endpoints", storage_blob_endpoints)
+    export("connection_string", storage_chain.storage_connection_string)
+    export("storage_account_keys", storage_chain.storage_account_keys)
+    export("queue_names", storage_chain.storage_queues.keys())
+
+    return StorageOutputs(
+        storage_chain=storage_chain,
+        storage_blob_endpoints=storage_blob_endpoints,
+        storage_queue_endpoints=storage_queue_endpoints,
+    )
+
+
+def setup_web_app(
+    app_insights: applicationinsights.Component | None,
+    app_svc_plan_name: str,
+    create: bool | None,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    func_app_name: str,
+    assigned_identity: managedidentity.UserAssignedIdentity,
+    func_runtime_args: dict | None,
+    storage_outputs: StorageOutputs | None,
+    location: str,
+    resource_group_name: Output[str],
+) -> web.WebApp | None:
+    if not create:
+        return None
+
+    app_svc_plan = web.AppServicePlan(
+        resource_name=app_svc_plan_name,
+        location=location,
+        kind="functionapp",
+        maximum_elastic_worker_count=1,
+        reserved=True,
+        resource_group_name=resource_group_name,
+        sku=web.SkuDescriptionArgs(
+            name="FC1",
+            tier="FlexConsumption",
+            size="F1",
+            family="F",
+            capacity=0,
+        ),
+        tags=default_tags,
+        zone_redundant=False,
+        opts=default_opts,
+    )
+    export("service_plan_name", app_svc_plan.name)
+
+    funcs_deployment_storage_args_value = None
+    if storage_outputs and storage_outputs.storage_blob_endpoints:
+        funcs_deployment_storage_args_value = (
+            storage_outputs.storage_blob_endpoints[resource_prefix]
+        )
+
+    web_func_runtime_args = web.FunctionsRuntimeArgs(
+        name="Python", version="3.13"
+    )
+
+    if func_runtime_args:
+        web_func_runtime_args = web.FunctionsRuntimeArgs(**func_runtime_args)
+
+    func_app_tags = default_tags.copy()
+    if app_insights:
+        func_app_tags = app_insights.id.apply(
+            lambda id: {
+                **default_tags,
+                "hidden-link: /app-insights-resource-id": id,
+            }
+        )
+
+    func_app = web.WebApp(
+        resource_name=func_app_name,
+        function_app_config=web.FunctionAppConfigArgs(
+            deployment=web.FunctionsDeploymentArgs(
+                storage=web.FunctionsDeploymentStorageArgs(
+                    authentication=web.FunctionsDeploymentAuthenticationArgs(
+                        user_assigned_identity_resource_id=assigned_identity.id,
+                        type=web.AuthenticationType.USER_ASSIGNED_IDENTITY,
+                    ),
+                    type=web.FunctionsDeploymentStorageType.BLOB_CONTAINER,
+                    value=funcs_deployment_storage_args_value,
+                ),
+            ),
+            runtime=web_func_runtime_args,
+            scale_and_concurrency=web.FunctionsScaleAndConcurrencyArgs(
+                always_ready=[],
+                instance_memory_mb=2048,
+                maximum_instance_count=100,
+                triggers=None,
+            ),
+        ),
+        identity=web.ManagedServiceIdentityArgs(
+            type=web.ManagedServiceIdentityType.SYSTEM_ASSIGNED_USER_ASSIGNED,
+            user_assigned_identities=[assigned_identity.id],
+        ),
+        kind="functionapp",
+        location=location,
+        resource_group_name=resource_group.name,
+        server_farm_id=app_svc_plan.id,
+        site_config=web.SiteConfigArgs(
+            app_settings=[],
+            cors=web.CorsSettingsArgs(
+                allowed_origins=["https://portal.azure.com"]
+            ),
+            min_tls_version=web.SupportedTlsVersions.SUPPORTED_TLS_VERSIONS_1_2,
+        ),
+        tags=func_app_tags,
+        opts=ResourceOptions(parent=app_svc_plan),
+    )
+    export("default_host_name", func_app.default_host_name)
+
+    return func_app
+
+
+def setup_web_app_settings(
+    func_app: web.WebApp,
+    resource_group_name: Output[str],
+    app_settings: dict[str, Input[str]],
+) -> web.WebAppApplicationSettings:
+    return web.WebAppApplicationSettings(
+        resource_name="webappsettings",
+        name=func_app.name,
+        resource_group_name=resource_group_name,
+        properties=app_settings,
+        opts=ResourceOptions(parent=func_app),
+    )
+
+
+storage_outputs = setup_storage(
+    create=create_storage_account,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    resource_group_name=resource_group.name,
+    prefix=resource_prefix,
+)
+
+analytics_and_logs = setup_anlytics_and_insights(
+    create_log_analytics=create_log_analytics,
+    create_app_insights=create_app_insights,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    resource_group_name=resource_group.name,
+    prefix=resource_prefix,
+)
+
+event_grid_topic = setup_event_grid(
+    create_event_grid=create_event_grid,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    location=location,
+    resource_group_name=resource_group.name,
+    prefix=resource_prefix,
+)
+
+assigned_identity = setup_assigned_identity(
+    default_opts=default_opts,
+    default_tags=default_tags,
+    location=location,
+    prefix=resource_prefix,
+    resource_group_name=resource_group.name,
+)
+
+identities.append(
+    IdentityOutput(
         principal_id=assigned_identity.principal_id,
-        principal_type=authorization.PrincipalType.SERVICE_PRINCIPAL,
-        opts=ResourceOptions(parent=assigned_identity),
+        parent=assigned_identity,
+        type=authorization.PrincipalType.SERVICE_PRINCIPAL,
+    ),
+)
+
+func_app = setup_web_app(
+    app_insights=analytics_and_logs.app_insights
+    if analytics_and_logs
+    else None,
+    app_svc_plan_name=app_svc_plan_name,
+    assigned_identity=assigned_identity,
+    create=(storage_outputs and create_function_app),
+    default_opts=default_opts,
+    default_tags=default_tags,
+    func_app_name=func_app_name,
+    func_runtime_args=func_runtime_args,
+    location=location,
+    resource_group_name=resource_group.name,
+    storage_outputs=storage_outputs,
+)
+
+role_assignments = define_role_assignments(
+    app_insights=analytics_and_logs.app_insights
+    if analytics_and_logs and analytics_and_logs.app_insights
+    else None,
+    storage_outputs=storage_outputs if storage_outputs else None,
+    event_grid_topic=event_grid_topic if event_grid_topic else None,
+)
+
+
+if func_app and func_app.identity:
+    identities.append(
+        IdentityOutput(
+            principal_id=func_app.identity.apply(
+                lambda id: id.principal_id if id else ""
+            ),
+            parent=func_app,
+            type=authorization.PrincipalType.SERVICE_PRINCIPAL,
+        )
     )
-    # Creator
-    authorization.RoleAssignment(
-        resource_name=f"User{assignment['role_name'].replace(' ', '')}{assignment['name_postfix']}",
+for assignment in role_assignments:
+    name = (
+        f"{assignment['role_name'].replace(' ', '')}"
+        f"{assignment['name_postfix']}"
+    )
+    setup_roles(
+        name=name,
+        identities=identities,
+        role_id=assignment["role_id"],
+        subscription_id=subscription_id,
         scope=assignment["scope"],
-        role_definition_id=role_defintion_id,
-        principal_id=get_client_config().object_id,
-        principal_type=authorization.PrincipalType.USER,
-        opts=ResourceOptions(parent=storage.storage_account),
     )
 
-### Create App Service Plan
-app_svc_plan = web.AppServicePlan(
-    resource_name=app_svc_plan_name,
-    location=location,
-    kind="functionapp",
-    maximum_elastic_worker_count=1,
-    reserved=True,
-    resource_group_name=resource_group.name,
-    sku=web.SkuDescriptionArgs(
-        name="FC1", tier="FlexConsumption", size="F1", family="F", capacity=0
-    ),
-    tags=default_tags,
-    zone_redundant=False,
-    opts=default_opts,
-)
+if func_app:
+    app_settings = define_app_settings(
+        storage_outputs=storage_outputs,
+        analytics_and_logs=analytics_and_logs,
+        assigned_identity=assigned_identity,
+        event_grid_topic=event_grid_topic,
+    )
 
-### Create Function App
-func_app = web.WebApp(
-    resource_name=func_app_name,
-    function_app_config=web.FunctionAppConfigArgs(
-        deployment=web.FunctionsDeploymentArgs(
-            storage=web.FunctionsDeploymentStorageArgs(
-                authentication=web.FunctionsDeploymentAuthenticationArgs(
-                    user_assigned_identity_resource_id=assigned_identity.id,
-                    type=web.AuthenticationType.USER_ASSIGNED_IDENTITY,
-                ),
-                type=web.FunctionsDeploymentStorageType.BLOB_CONTAINER,
-                value=storage.storage_blob_container_url,
-            ),
-        ),
-        runtime=web.FunctionsRuntimeArgs(name="Python", version="3.13"),
-        scale_and_concurrency=web.FunctionsScaleAndConcurrencyArgs(
-            always_ready=[],
-            instance_memory_mb=2048,
-            maximum_instance_count=100,
-            triggers=None,
-        ),
-    ),
-    identity=web.ManagedServiceIdentityArgs(
-        type=web.ManagedServiceIdentityType.USER_ASSIGNED,
-        user_assigned_identities=[assigned_identity.id],
-    ),
-    kind="functionapp",
-    location=location,
-    resource_group_name=resource_group.name,
-    server_farm_id=app_svc_plan.id,
-    site_config=web.SiteConfigArgs(
-        app_settings=[
-            web.NameValuePairArgs(
-                name="AzureWebJobsStorage__accountName",
-                value=storage.storage_account.name,
-            ),
-            web.NameValuePairArgs(
-                name="AzureWebJobsStorage__credential", value="managedidentity"
-            ),
-            web.NameValuePairArgs(
-                name="AzureWebJobsStorage__clientId",
-                value=assigned_identity.client_id,
-            ),
-            web.NameValuePairArgs(
-                name="APPINSIGHTS_INSTRUMENTATIONKEY",
-                value=app_insights.instrumentation_key,
-            ),
-            web.NameValuePairArgs(
-                name="APPLICATIONINSIGHTS_AUTHENTICATION_STRING",
-                value=Output.concat(
-                    "ClientId=",
-                    assigned_identity.client_id,
-                    ";Authorization=AAD",
-                ),
-            ),
-            web.NameValuePairArgs(
-                name="FlashyEventGrid__topicEndpointUri",
-                value=event_grid_topic.endpoint,
-            ),
-            web.NameValuePairArgs(
-                name="FlashyEventGrid__credential", value="managedidentity"
-            ),
-            web.NameValuePairArgs(
-                name="FlashyEventGrid__clientId",
-                value=assigned_identity.client_id,
-            ),
-        ],
-        cors=web.CorsSettingsArgs(allowed_origins=["https://portal.azure.com"]),
-        min_tls_version=web.SupportedTlsVersions.SUPPORTED_TLS_VERSIONS_1_2,
-    ),
-    tags={
-        **default_tags,
-        "hidden-link: /app-insights-resource-id": app_insights.id,
-    },
-    opts=ResourceOptions(parent=app_svc_plan),
-)
+    web_app_settings = setup_web_app_settings(
+        func_app=func_app,
+        resource_group_name=resource_group.name,
+        app_settings=app_settings,
+    )
 
-
-export("default_host_name", func_app.default_host_name)
-export("service_plan_name", app_svc_plan.name)
-export("blob_container_url", storage.storage_blob_container_url)
-export("connection_string", storage.storage_connection_string)
-export("storage_account_keys", storage.storage_account_keys)
-export("queue_name", storage.storage_queue.name)
-export("eventgrid_topic_endpoint", event_grid_topic.endpoint)
-export("manage_user_client_id", assigned_identity.client_id)
+    export("web_app_settings", app_settings)
