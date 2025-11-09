@@ -11,6 +11,7 @@ from configs import (
     create_app_insights,
     create_event_grid,
     create_function_app,
+    create_key_vault,
     create_log_analytics,
     create_storage_account,
     blob_names,
@@ -26,6 +27,7 @@ from pulumi_azuread import get_client_config
 from pulumi_azure_native import (
     applicationinsights,
     authorization,
+    keyvault,
     eventgrid,
     managedidentity,
     operationalinsights,
@@ -60,6 +62,84 @@ identities: list[IdentityOutput] = [
     )
 ]
 
+def add_secret(
+    secret_name: str,
+    secret_value: Input[str],
+    key_vault: keyvault.Vault,
+    resource_group: resources.ResourceGroup,
+):
+    secret = keyvault.Secret(
+        resource_name=secret_name,
+        properties=keyvault.SecretPropertiesArgs(
+            value=secret_value,
+        ),
+        resource_group_name=resource_group.name,
+        secret_name=secret_name,
+        vault_name=key_vault.name,
+        opts=ResourceOptions(parent=key_vault),
+    )
+
+    export(
+        f"secret_{secret_name}",
+        secret.properties.apply(lambda p: p.secret_uri_with_version),
+    )
+    return secret
+
+
+def define_akv_permissions() -> dict[str, keyvault.PermissionsArgs]:
+    return {
+        "admin_permissions": keyvault.PermissionsArgs(
+            secrets=[
+                "get",
+                "list",
+                "set",
+                "delete",
+                "backup",
+                "restore",
+                "recover",
+                "purge",
+            ],
+            keys=[
+                "encrypt",
+                "decrypt",
+                "wrapKey",
+                "unwrapKey",
+                "sign",
+                "verify",
+                "get",
+                "list",
+                "create",
+                "update",
+                "import",
+                "delete",
+                "backup",
+                "restore",
+                "recover",
+                "purge",
+            ],
+            certificates=[
+                "get",
+                "list",
+                "delete",
+                "create",
+                "import",
+                "update",
+                "managecontacts",
+                "getissuers",
+                "listissuers",
+                "setissuers",
+                "deleteissuers",
+                "manageissuers",
+                "recover",
+                "purge",
+            ],
+        ),
+        "managed_id_permissions": keyvault.PermissionsArgs(
+            secrets=["get"],
+            keys=[],
+            certificates=[],
+        ),
+    }
 
 
 def define_role_assignments(
@@ -130,12 +210,16 @@ def define_role_assignments(
 
 def define_app_settings(
     assigned_identity: managedidentity.UserAssignedIdentity,
+    akv_secrets: dict[str, Output[str]] | None,
     storage_outputs: StorageOutputs | None,
     analytics_and_logs: AnalyticsAndLogsOutputs | None,
     event_grid_topic: eventgrid.Topic | None,
 ) -> dict[str, Input[str]]:
     app_settings = {}
 
+    if akv_secrets:
+        for secret_name, secret in akv_secrets.items():
+            app_settings[secret_name] = secret
     if analytics_and_logs and analytics_and_logs.app_insights:
         app_settings["APPINSIGHTS_INSTRUMENTATIONKEY"] = (
             analytics_and_logs.app_insights.instrumentation_key
@@ -204,6 +288,62 @@ def setup_anlytics_and_insights(
     return AnalyticsAndLogsOutputs(
         log_analytics=log_analytics, app_insights=app_insights
     )
+
+
+def setup_akv(
+    create: bool,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    identities: list[IdentityOutput],
+    location: str,
+    resource_group_name: Output[str],
+    prefix: str,
+) -> keyvault.Vault | None:
+    if not create:
+        return None
+
+    permissions = define_akv_permissions()
+    access_policies: list[keyvault.AccessPolicyEntryArgs] = []
+
+    identities_and_permissions: dict[Input[str], keyvault.PermissionsArgs] = {}
+
+    for identity in identities:
+        permission = permissions["managed_id_permissions"]
+        if identity.type == authorization.PrincipalType.USER:
+            permission = permissions["admin_permissions"]
+
+        identities_and_permissions[identity.principal_id] = permission
+
+    for identity, permissions in identities_and_permissions.items():
+        access_policies.append(
+            keyvault.AccessPolicyEntryArgs(
+                object_id=identity,
+                permissions=permissions,
+                tenant_id=get_client_config().tenant_id,
+            )
+        )
+
+    key_vault = keyvault.Vault(
+        resource_name=f"{prefix}-keyvault",
+        location=location,
+        properties=keyvault.VaultPropertiesArgs(
+            access_policies=access_policies,
+            enable_rbac_authorization=False,
+            enabled_for_deployment=True,
+            enabled_for_disk_encryption=True,
+            enabled_for_template_deployment=True,
+            sku=keyvault.SkuArgs(name=keyvault.SkuName.STANDARD, family="A"),
+            enable_soft_delete=False,
+            tenant_id=get_client_config().tenant_id,
+        ),
+        resource_group_name=resource_group_name,
+        tags=default_tags,
+        opts=default_opts,
+    )
+
+    export("azure_key_vault_uri", key_vault.properties.vault_uri)
+
+    return key_vault
 
 
 def setup_assigned_identity(
@@ -584,8 +724,35 @@ for assignment in role_assignments:
         scope=assignment["scope"],
     )
 
+key_vault = setup_akv(
+    create=create_key_vault,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    identities=identities,
+    location=location,
+    resource_group_name=resource_group.name,
+    prefix=resource_prefix,
+)
+
+secrets: dict[str, Output[str]] = {}
+if storage_outputs and key_vault:
+    secret_name = "StorageConnectionString"
+    secret = add_secret(
+        key_vault=key_vault,
+        resource_group=resource_group,
+        secret_name=secret_name,
+        secret_value=storage_outputs.storage_chain.storage_connection_string,
+    )
+    secrets[secret_name] = Output.concat(
+        "@Microsoft.KeyVault(SecretUri=",
+        secret.properties.apply(lambda p: p.secret_uri_with_version),
+        ")",
+    )
+
+
 if func_app:
     app_settings = define_app_settings(
+        akv_secrets=secrets,
         storage_outputs=storage_outputs,
         analytics_and_logs=analytics_and_logs,
         assigned_identity=assigned_identity,
