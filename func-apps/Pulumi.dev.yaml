@@ -3,19 +3,19 @@ config:
   azure-native:subscriptionId: 897cf406-9dc2-4bb6-90a1-89243710ee08
   azure-native:useDefaultAzureCredential: "true"
   # Resource creation toggles
-  function-apps:create_app_insights: true
-  function-apps:create_event_grid: false
-  function-apps:create_function_app: true
-  function-apps:create_key_vault: true
-  function-apps:create_log_analytics: false
-  function-apps:create_storage_account: true
+  uber-demo:create_app_insights: true
+  uber-demo:create_event_grid: false
+  uber-demo:create_function_app: true
+  uber-demo:create_key_vault: true
+  uber-demo:create_log_analytics: false
+  uber-demo:create_storage_account: true
   # Resource names and settings
-  function-apps:app_svc_plan_name: az-204-flashyApps
-  function-apps:blob_names: []
-  function-apps:func_app_name: helloapp
-  function-apps:resource-group-prefix: flashy-app
-  function-apps:queue_names: []
+  uber-demo:app_svc_plan_name: az-204-flashyApps
+  uber-demo:blob_names: []
+  uber-demo:func_app_name: helloapp
+  uber-demo:resource-group-prefix: flashy-demo
+  uber-demo:queue_names: []
   # Function App Settings
-  function-apps:func_runtime_args:
+  uber-demo:func_runtime_args:
       name: "dotnet-isolated"
       version: "8.0"

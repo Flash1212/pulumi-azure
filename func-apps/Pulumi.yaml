@@ -1,5 +1,6 @@
-name: function-apps
-description: An Azure Native Python Pulumi program for creating app function resources
+name: uber-demo
+description: An Azure Native Python Pulumi program for creating an uber demo
+  of various Azure resources
 runtime:
   name: python
 
