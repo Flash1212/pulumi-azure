@@ -1,14 +1,19 @@
 from pulumi import ComponentResource, InvokeOptions, Output, ResourceOptions
-from pulumi_azure_native import storage
+from pulumi_azure_native import cosmosdb, storage
 from attr import dataclass, field
 from typing import Optional
 
 
 @dataclass
+class CosmosComponentArgs:
+    name: str
+    args: dict
+
+
+@dataclass
 class CosmosDBArgs:
-    resource_prefix: str
     resource_group_name: Output[str]
-    cosmos_account_args: dict
+    cosmos_account_args: CosmosComponentArgs
     tags: dict = field(factory=dict)
 
 
@@ -53,6 +58,68 @@ class StorageAccountDefaults:
         storage.PublicNetworkAccess.ENABLED
     )
     sku: storage.SkuArgs = storage.SkuArgs(name=storage.SkuName.STANDARD_LRS)
+
+
+class CosmosNoSQL(ComponentResource):
+    """
+    Create a Storage Account with specified components.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        args: CosmosDBArgs,
+        opts: ResourceOptions,
+    ):
+        super().__init__("flash1212:storage:StorageChain", name, None, opts)
+
+        self.opts = ResourceOptions.merge(opts, ResourceOptions(parent=self))
+
+        self.cosmos_account = cosmosdb.DatabaseAccount(
+            resource_name=args.cosmos_account_args.name,
+            resource_group_name=args.resource_group_name,
+            **args.cosmos_account_args.args,
+            tags={
+                **args.tags,
+                "defaultExperience": "Core (SQL)",
+                "hidden-workload-type": "Learning",
+                "hidden-cosmos-mmspecial": "",
+            },
+            opts=self.opts,
+        )
+
+        self.__get_keys_and_string(
+            account_name=self.cosmos_account.name,
+            resource_group_name=args.resource_group_name,
+        )
+
+    def __get_keys_and_string(
+        self, account_name: Output[str], resource_group_name: Output[str]
+    ) -> None:
+        self.cosmos_account_keys: Output[
+            cosmosdb.ListDatabaseAccountKeysResult
+        ] = Output.secret(
+            cosmosdb.list_database_account_keys_output(
+                account_name=account_name,
+                resource_group_name=resource_group_name,
+            )
+        )
+        self.primary_master_key: Output[str] = Output.secret(
+            self.cosmos_account_keys.apply(lambda sak: sak.primary_master_key)
+        )
+        self.primary_readonly_master_key: Output[str] = Output.secret(
+            self.cosmos_account_keys.apply(
+                lambda sak: sak.primary_readonly_master_key
+            )
+        )
+        self.connection_strings: Output[
+            cosmosdb.ListDatabaseAccountConnectionStringsResult
+        ] = Output.secret(
+            cosmosdb.list_database_account_connection_strings_output(
+                account_name=account_name,
+                resource_group_name=resource_group_name,
+            )
+        )
 
 
 class StorageChain(ComponentResource):

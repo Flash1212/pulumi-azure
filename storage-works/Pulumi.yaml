@@ -1,0 +1,4 @@
+name: storage-works
+description: An Azure Native Python Pulumi program for creating storage components
+runtime:
+  name: python

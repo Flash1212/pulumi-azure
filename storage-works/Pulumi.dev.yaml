@@ -1,0 +1,11 @@
+config:
+  azure-native:location: centralus
+  azure-native:subscriptionId: 897cf406-9dc2-4bb6-90a1-89243710ee08
+  azure-native:useDefaultAzureCredential: "true"
+  storage-works:resource-group-prefix: flashy-storage
+  storage-works:container-names:
+    - images
+  storage-works:create-container-sas: true
+  storage-works:queue-names: []
+  storage-works:table-names: []
+  storage-works:create-cosmos-db: true

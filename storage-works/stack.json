@@ -1,0 +1,1371 @@
+{
+    "version": 3,
+    "deployment": {
+        "manifest": {
+            "time": "2025-10-09T10:36:29.791244391-05:00",
+            "magic": "fab95cc1ec33ad4842e4ce440b669bd522c568e8a7a8934e58ff24ba38128033",
+            "version": "v3.200.0"
+        },
+        "secrets_providers": {
+            "type": "service",
+            "state": {
+                "url": "https://api.pulumi.com",
+                "owner": "Flash1212",
+                "project": "storage-works",
+                "stack": "dev"
+            }
+        },
+        "metadata": {},
+        "resources": [
+            {
+                "urn": "urn:pulumi:dev::storage-works::pulumi:providers:azuread::default_6_5_1",
+                "custom": true,
+                "id": "edbff40d-1bee-4914-984b-1917eab1c701",
+                "type": "pulumi:providers:azuread",
+                "inputs": {
+                    "__internal": {},
+                    "version": "6.5.1"
+                },
+                "outputs": {
+                    "version": "6.5.1"
+                },
+                "created": "2025-10-07T23:32:09.592429948Z",
+                "modified": "2025-10-07T23:32:09.592429948Z"
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::pulumi:pulumi:Stack::storage-works-dev",
+                "custom": false,
+                "type": "pulumi:pulumi:Stack",
+                "outputs": {
+                    "cosmosdb": {
+                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                        "ciphertext": "AAABANDyZJx4+lhpOghH+0Vxkg/kJFZTRl+X8QWyRsGsdhpomVxnC9jXqxc2vlzQ/prObkT1HYkZ7FrYccsvLuPyXQOKEghR05rCHQJ79gisJJq3+XekE5bOhlQknay61BfNy3Rnahtn3zifbzwCK5b2b2pTvAeMjubpEAbpEmQLjjo9zzEFVKrYWIrECs1CpC/aiPuQ9T8m/0rTvaTCa8dwpxFJRVa8T1Gcc0plPEFou9DKyyNdQ0Xt91vckPgjLdIJx21ry+Odt6FMBYIYvP6ycyyyWCq4XCBT8IJ4vWxQaPhClaZLviotZOXql0Y7kQf98qWE178nbrQobHHBznTLxIfEi1repIsyYVN/bFNSXcB4xy67kyg44Y4ICegHhsOGapZa13LIyBwAcE/v0RPWAVKw1JJUJ1Cn8B8Hz6GNcYi0uWFnEs0MJdlIIzxlowNbbmPe6cG3IgoygVFMgYHE6ddPT2jmwBBRacFWE2Ii9sVdPli8ZEtXu45NjFicWEp9cw0U992y4UNcXx64EoqdUM+9Uopcduq18wgLdYNX7YRgEXoYEWe00qjeJ+oulL/bnrYiAC/ltQCFm8lxvCJ6ob61J5C8jlChKd1e3sAuqloAZHtY31GxLcAlkJQyG+rabEAdlvxU8GkJGcp8Qf9qTeYoHyiRecQ+PVT4AebpIMVU1gPYgEOon2iWWpqScj//qDZxjUHMGdgBNNvgU3fFk+W9z9roJXqaPHcTqy9pKDtVl+CwWmUvzDXa5U8sEd2fblEMwYkQbXhTbAQAb5HDziMjDlaYQPocnjpbIpfPDz4johjidbHN91ggG8BCEY8hWpmDvOpf5RpeNV9Xr7lXv2/kjgVuP9VP35gckLssLAlHH1RBziyusr3Mu/m1pQA26tVuRiZxwXU06aVEkuUDzctHIvQYUh9dPFvNQexe3OTAAtDbatlO8TLVW8bJtTHr78fiC0DgNupptjShcr0tnj+xgCLiEZ8PL/9Gtd9e/FnfGG3Qt5H+2UdFI4uycN0MU6YNwJ+/PomG+pFSJFbDl9z7ZyOPoFM2lGEEtgO3+cP2F+dZ1fjEEWN2DHKkgCq0XBCODUnzoZWUIQvuS/rLmnn/Spqc9jEcQqbbyTjYjSHVZ5Xh0qtzIvKEX8fah08faDgSldE7chwDVnTYjnNVXpdIQWMPFL2+YWyBaJce57tPGNMpGhHoWSX6blNhKmFatUA9KQq/zjUo9UMNRB6ezclZrT8iiJJ2CFbmlf22aAbBJ7KVgJeMldNZi4MxsB8whMXP8Gh3iLBIkMrQMasztUTZO29aIcWuh1cfJebIn+6Lp30C/ETDLX6kcTmeIH+Z220ArztqemhVKVIqyu3v0kMcmgIRtTx1i+M1niY1rTLujuGF8yrNKpd449ZrOR7V4iBZeXtXL/J37HKzqvt8I5zJOuNOnJXMwWTXauYMSie6Xb4zs1hpIYrBeKDgnWIwYCvmFlfY3NZth/zaHyW9Dd2Cq6E31Ah8+4SBn4tCtD40oD5GZwJ7J2SZIrnZNKi6B/afulfkMJdJM4tl7r6sRXLVtfB+bMc87KM4oegWNQr4WwKDETbFS06wohq/Ju4cbqVpnKv1JJBakt4KFN/aJZku8zdkSCVBdPILX3dq7CWaWnCMbkdLpjISTelj4lnCKeTq+afPBKcYJBbSWNkoMrhwrQLHJiEIcXtSOLsWt5NWY2xdDCyiCyRLWWuV9xXkY1DeWDxuB5Z93w6SANiQLvSgdfsGK+qgUp3CHTQRD/wwTjIzUuEESgISU/u/WS3jeco2ihxkzZauOr8i2rmDs8BiT8teCR26zHBFnjTDL2XAmRlOUZNA0FpgMNsV3binudUaxYc376qWfF7g6aZ7HNsjzab/8UfQZTGSGRoqXz1VPfFG+EeL/QEiUXDeURPkBCp2Ar6MfQQneEXpnkf7gvkRSLsUrnpr3bjkflmyEoAPC9Hh1Dom1qte8M9XK0wkwk8Uz6lPmu40VkSsWYMIZURR3XE9HS021V13y4292RgL8ZZXPHlgujWdqfKRtHx6ICwPtQzreQ5C14jo+a5MUtMrExhqd1iAobpY5oojxTeJMAlqyrd6ObtSf3nNanGQ+YFk74uM+A=="
+                    },
+                    "managed_id": {
+                        "client_id": "c36a2e7c-8aae-4844-b88b-e90986ce5e2a"
+                    },
+                    "storage": {
+                        "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
+                        "ciphertext": "AAABAHqihIwIOTJhi+nkYb22GnsEkKB7Sv5SA5c/CjqVC9yeqsAjv2nEqGeg+3RPa+fqCkQyOmngKoALgxeHCTa2hG93BGNYEsL9sSA6qdrSNumCKQWsmZqlylYqSFhxSf/dvoGFcZhE7D60gqkp0S7WDwsjIGlIcszi+gBO109yt2pb+4DkUSHVxov8DlO7C7SD+Uiu+hkXwmCB4biYB9NAacI/8JEItJM5cdUZczMLJK6fZwwdxl3KcvAzMppIN1iZKiRA4lOgk/LVAPLO4tZW8SJTfH5VuFzOTjWvXcKeNbwOxuY78bzKwBdos5Hsj0sMN/PcnJr3RdwK9poDe75ZRjrrMgd+CPlZ1DtHp/kYLDHBnL4QN8xQ8lWrDlYvfh/veFUi2PCGN8/kUvxR3YgA0EzRkH2MrqA0TmUdrkiwF+7XxuDcpqI8ee0SbtB1f2zEXuyrGdQLkdsI1mme54Te6kZ6NBlhRS6MvAgbajZuQCNmcI/ZSxIcIQt5oaAI4DAx1FEIxp8Ek+wJBWqxEXAbKhF+2LP6j77WIAaVBuqLG4Y51wIZKRdh8b13SkPvx2KiNtdoUzxd2vuxLxQZMtnqe9g1d7g76RwI/MtUBeFgV8oLm4+qeO+I+6591frzNuPm+jRislD8BNtpOMC4QodJcHnhngTAUEQ8bfouGQsU9NyJT+4EFluA/PoBCM6LAa26uIPV4jgjJfjRmd4JPcfnkLkYb2xFs0ie1Zev3zAi4BNRkPC1rBULDlFtTrzZIouTnKJbkpSSbSeNrd0/aDt8wC8nVIaQM8SBEysVNYVVM4WeZcTlh0HT9lL+lWqtrsJ21WLjqRSZWN9mKbgxbSeBIlYOuVmWTbydg3T0yef9TpDnMvTkzzSc4h6cUAPD5RsrTovQjbaKYLj8Sbez6vvpV9D5Px2s1cI1Tr53vJ4M2w5sovhbMpaDIvrwllE/DDctU0g3VU538zAdU0WMn7qRGmXD03U4kVriYbROujEvUOCeSOuGm3pjTuroPZq2GnGAGzpumP0eH/Zj2dLUZqq/mOTfr4c8qdHbmtfkhvqUgLbrxfe9tOLqPylS8ZEbkCzyaEUSohTJnIbSHThKxjnsYyUTttLmHEpiTMH0sl1zaIacYMeV3HWqm3CsxlewY2U+QPzE9kRSUwkGGEtAc+jLH7pjRZTfLDpE9T901KytYrMo5/MLhAvGvd3XRUFGbsRcvZrivtvZMWWYmrKU7GMlp97HXuOoXXRMwOZKtWvBUheUCJmch7Sli/iGL8Krh3hINww1SsL0oaDZinL3KqxVvjJhcWGfxkvyF2vn/Y1bVZpG2VK/l4UjX3ci0cfmnd3LQRsCyP4a5Qv5y6JUqUO7jQerZxbKWDmbX7S/L6MJvc5LSkQwsHkeGeOZTbC1e5NeKBN4gHYF4t8N5TLIe5PktJRrUH5IEbjt1NoTx8e5828mSjuPFgstYP9wDtLqVcxjiAwkzOl/VLuhTm1Pi2ltkTa0zk3d+8wS9znCccMP1Xz95CiVk8p2jhnuqSRZTaEfCl72erk+cOnwYoAX1Dtzs8zsE9tGECj74Sjrki0DZDYTsKTXDz1ld8XeatAIj6sP40hzwXiY2o8K9We8Ry0iBSJW1pAOI7ndn30JcRa7XaXe3HGcsYAtOLQ5D3MHnmRQPF/e681nCSHEv72RkbsSvCRjeTskQP/kZoAxM95z2ehnSYObMPfisUEsULLSTQulWxu7aUngnvmH8i3+kAjK4dkz7p6AfG41R36iR967Hxe6xomsAD+LZHDgD7C9G14olm7menXtvaKBPmAtBnfHaWc4uYP7K/at2tkLECIm1rBis8+2m6qh5NCt1uySwJpRzGZKIWjf"
+                    }
+                },
+                "created": "2025-10-07T23:32:09.469280721Z",
+                "modified": "2025-10-07T23:32:09.469280721Z",
+                "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0",
+                "custom": true,
+                "id": "b20de134-4b5d-4112-b09a-011f45e325a4",
+                "type": "pulumi:providers:azure-native",
+                "inputs": {
+                    "__internal": {},
+                    "location": "centralus",
+                    "subscriptionId": "897cf406-9dc2-4bb6-90a1-89243710ee08",
+                    "useDefaultAzureCredential": "true",
+                    "version": "3.8.0"
+                },
+                "outputs": {
+                    "location": "centralus",
+                    "subscriptionId": "897cf406-9dc2-4bb6-90a1-89243710ee08",
+                    "useDefaultAzureCredential": "true",
+                    "version": "3.8.0"
+                },
+                "created": "2025-10-07T23:32:10.545463231Z",
+                "modified": "2025-10-07T23:32:10.545463231Z"
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40",
+                "type": "azure-native:resources:ResourceGroup",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2024-03-01",
+                    "location": "centralus",
+                    "resourceGroupName": "flashy-storage-centralusc2381b40"
+                },
+                "outputs": {
+                    "azureApiVersion": "2024-03-01",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40",
+                    "location": "centralus",
+                    "name": "flashy-storage-centralusc2381b40",
+                    "properties": {
+                        "provisioningState": "Succeeded"
+                    },
+                    "type": "Microsoft.Resources/resourceGroups"
+                },
+                "parent": "urn:pulumi:dev::storage-works::pulumi:pulumi:Stack::storage-works-dev",
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "created": "2025-10-07T23:32:16.05515952Z",
+                "modified": "2025-10-07T23:32:16.05515952Z",
+                "sourcePosition": "project:///__main__.py#48",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#48"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain::flashy-storage",
+                "custom": false,
+                "type": "flash1212:storage:StorageChain",
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus",
+                "created": "2025-10-07T23:32:16.407309338Z",
+                "modified": "2025-10-07T23:32:16.407309338Z",
+                "sourcePosition": "project:///__main__.py#104",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#104"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain::flashy-cosmos",
+                "custom": false,
+                "type": "flash1212:storage:StorageChain",
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus",
+                "created": "2025-10-07T23:32:16.296915315Z",
+                "modified": "2025-10-07T23:32:16.296915315Z",
+                "sourcePosition": "project:///__main__.py#167",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#167"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                "type": "azure-native:storage:StorageAccount",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "accessTier": "Hot",
+                    "accountName": "flashystoracct9c972529",
+                    "allowBlobPublicAccess": true,
+                    "allowSharedKeyAccess": true,
+                    "azureApiVersion": "2024-01-01",
+                    "dnsEndpointType": "Standard",
+                    "kind": "StorageV2",
+                    "location": "centralus",
+                    "minimumTlsVersion": "TLS1_2",
+                    "networkRuleSet": {
+                        "bypass": "AzureServices",
+                        "defaultAction": "Allow"
+                    },
+                    "publicNetworkAccess": "Enabled",
+                    "resourceGroupName": "flashy-storage-centralusc2381b40",
+                    "sku": {
+                        "name": "Standard_LRS"
+                    }
+                },
+                "outputs": {
+                    "accessTier": "Hot",
+                    "allowBlobPublicAccess": true,
+                    "allowCrossTenantReplication": false,
+                    "allowSharedKeyAccess": true,
+                    "azureApiVersion": "2024-01-01",
+                    "creationTime": "2025-10-07T23:32:18.6096367Z",
+                    "dnsEndpointType": "Standard",
+                    "enableHttpsTrafficOnly": true,
+                    "encryption": {
+                        "keySource": "Microsoft.Storage",
+                        "services": {
+                            "blob": {
+                                "enabled": true,
+                                "keyType": "Account",
+                                "lastEnabledTime": "2025-10-07T23:32:18.7658852Z"
+                            },
+                            "file": {
+                                "enabled": true,
+                                "keyType": "Account",
+                                "lastEnabledTime": "2025-10-07T23:32:18.7658852Z"
+                            }
+                        }
+                    },
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "keyCreationTime": {
+                        "key1": "2025-10-07T23:32:18.7503368Z",
+                        "key2": "2025-10-07T23:32:18.7503368Z"
+                    },
+                    "kind": "StorageV2",
+                    "location": "centralus",
+                    "minimumTlsVersion": "TLS1_2",
+                    "name": "flashystoracct9c972529",
+                    "networkRuleSet": {
+                        "bypass": "AzureServices",
+                        "defaultAction": "Allow",
+                        "ipRules": [],
+                        "virtualNetworkRules": []
+                    },
+                    "primaryEndpoints": {
+                        "blob": "https://flashystoracct9c972529.blob.core.windows.net/",
+                        "dfs": "https://flashystoracct9c972529.dfs.core.windows.net/",
+                        "file": "https://flashystoracct9c972529.file.core.windows.net/",
+                        "queue": "https://flashystoracct9c972529.queue.core.windows.net/",
+                        "table": "https://flashystoracct9c972529.table.core.windows.net/",
+                        "web": "https://flashystoracct9c972529.z19.web.core.windows.net/"
+                    },
+                    "primaryLocation": "centralus",
+                    "privateEndpointConnections": [],
+                    "provisioningState": "Succeeded",
+                    "publicNetworkAccess": "Enabled",
+                    "sku": {
+                        "name": "Standard_LRS",
+                        "tier": "Standard"
+                    },
+                    "statusOfPrimary": "available",
+                    "tags": {},
+                    "type": "Microsoft.Storage/storageAccounts"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain::flashy-storage",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "accessTier": [],
+                    "allowBlobPublicAccess": [],
+                    "allowSharedKeyAccess": [],
+                    "dnsEndpointType": [],
+                    "kind": [],
+                    "location": [],
+                    "minimumTlsVersion": [],
+                    "networkRuleSet": [],
+                    "publicNetworkAccess": [],
+                    "resourceGroupName": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                    ],
+                    "sku": []
+                },
+                "created": "2025-10-07T23:32:37.957339324Z",
+                "modified": "2025-10-07T23:32:37.957339324Z",
+                "sourcePosition": "project:///../modules/storage.py#143",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///../modules/storage.py#143"
+                    },
+                    {
+                        "sourcePosition": "project:///__main__.py#104"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:cosmosdb:DatabaseAccount::flashycosmosacct",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.DocumentDB/databaseAccounts/flashycosmosacct76532134",
+                "type": "azure-native:cosmosdb:DatabaseAccount",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "accountName": "flashycosmosacct76532134",
+                    "azureApiVersion": "2024-11-15",
+                    "backupPolicy": {
+                        "continuousModeProperties": {
+                            "tier": "Continuous7Days"
+                        },
+                        "type": "Continuous"
+                    },
+                    "capabilities": [
+                        {
+                            "name": "EnableServerless"
+                        }
+                    ],
+                    "capacity": {
+                        "totalThroughputLimit": 4000
+                    },
+                    "consistencyPolicy": {
+                        "defaultConsistencyLevel": "Session",
+                        "maxIntervalInSeconds": 5,
+                        "maxStalenessPrefix": 100
+                    },
+                    "createMode": "Default",
+                    "databaseAccountOfferType": "Standard",
+                    "defaultIdentity": "FirstPartyIdentity",
+                    "enableFreeTier": true,
+                    "kind": "GlobalDocumentDB",
+                    "location": "centralus",
+                    "locations": [
+                        {
+                            "failoverPriority": 0,
+                            "isZoneRedundant": false,
+                            "locationName": "Central US"
+                        }
+                    ],
+                    "minimalTlsVersion": "Tls12",
+                    "publicNetworkAccess": "Enabled",
+                    "resourceGroupName": "flashy-storage-centralusc2381b40",
+                    "tags": {
+                        "defaultExperience": "Core (SQL)",
+                        "hidden-cosmos-mmspecial": "",
+                        "hidden-workload-type": "Learning"
+                    }
+                },
+                "outputs": {
+                    "analyticalStorageConfiguration": {
+                        "schemaType": "WellDefined"
+                    },
+                    "azureApiVersion": "2024-11-15",
+                    "backupPolicy": {
+                        "continuousModeProperties": {
+                            "tier": "Continuous7Days"
+                        },
+                        "type": "Continuous"
+                    },
+                    "capabilities": [
+                        {
+                            "name": "EnableServerless"
+                        }
+                    ],
+                    "capacity": {
+                        "totalThroughputLimit": 4000
+                    },
+                    "consistencyPolicy": {
+                        "defaultConsistencyLevel": "Session",
+                        "maxIntervalInSeconds": 5,
+                        "maxStalenessPrefix": 100
+                    },
+                    "cors": [],
+                    "createMode": "Default",
+                    "databaseAccountOfferType": "Standard",
+                    "defaultIdentity": "FirstPartyIdentity",
+                    "disableKeyBasedMetadataWriteAccess": false,
+                    "disableLocalAuth": false,
+                    "documentEndpoint": "https://flashycosmosacct76532134.documents.azure.com:443/",
+                    "enableAnalyticalStorage": false,
+                    "enableAutomaticFailover": true,
+                    "enableBurstCapacity": false,
+                    "enableFreeTier": true,
+                    "enableMultipleWriteLocations": false,
+                    "enablePartitionMerge": false,
+                    "enablePerRegionPerPartitionAutoscale": false,
+                    "failoverPolicies": [
+                        {
+                            "failoverPriority": 0,
+                            "id": "flashycosmosacct76532134-centralus",
+                            "locationName": "Central US"
+                        }
+                    ],
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.DocumentDB/databaseAccounts/flashycosmosacct76532134",
+                    "identity": {
+                        "type": "None"
+                    },
+                    "instanceId": "f3b9ee4b-ac24-4e01-8bf3-5fcba7864821",
+                    "ipRules": [],
+                    "isVirtualNetworkFilterEnabled": false,
+                    "keysMetadata": {
+                        "primaryMasterKey": {
+                            "generationTime": "2025-10-07T23:42:01.2243664Z"
+                        },
+                        "primaryReadonlyMasterKey": {
+                            "generationTime": "2025-10-07T23:42:01.2243664Z"
+                        },
+                        "secondaryMasterKey": {
+                            "generationTime": "2025-10-07T23:42:01.2243664Z"
+                        },
+                        "secondaryReadonlyMasterKey": {
+                            "generationTime": "2025-10-07T23:42:01.2243664Z"
+                        }
+                    },
+                    "kind": "GlobalDocumentDB",
+                    "location": "Central US",
+                    "locations": [
+                        {
+                            "documentEndpoint": "https://flashycosmosacct76532134-centralus.documents.azure.com:443/",
+                            "failoverPriority": 0,
+                            "id": "flashycosmosacct76532134-centralus",
+                            "isZoneRedundant": false,
+                            "locationName": "Central US",
+                            "provisioningState": "Succeeded"
+                        }
+                    ],
+                    "minimalTlsVersion": "Tls12",
+                    "name": "flashycosmosacct76532134",
+                    "networkAclBypass": "None",
+                    "networkAclBypassResourceIds": [],
+                    "provisioningState": "Succeeded",
+                    "publicNetworkAccess": "Enabled",
+                    "readLocations": [
+                        {
+                            "documentEndpoint": "https://flashycosmosacct76532134-centralus.documents.azure.com:443/",
+                            "failoverPriority": 0,
+                            "id": "flashycosmosacct76532134-centralus",
+                            "isZoneRedundant": false,
+                            "locationName": "Central US",
+                            "provisioningState": "Succeeded"
+                        }
+                    ],
+                    "systemData": {
+                        "createdAt": "2025-10-07T23:42:01.2243664Z"
+                    },
+                    "tags": {
+                        "defaultExperience": "Core (SQL)",
+                        "hidden-cosmos-mmspecial": "",
+                        "hidden-workload-type": "Learning"
+                    },
+                    "type": "Microsoft.DocumentDB/databaseAccounts",
+                    "virtualNetworkRules": [],
+                    "writeLocations": [
+                        {
+                            "documentEndpoint": "https://flashycosmosacct76532134-centralus.documents.azure.com:443/",
+                            "failoverPriority": 0,
+                            "id": "flashycosmosacct76532134-centralus",
+                            "isZoneRedundant": false,
+                            "locationName": "Central US",
+                            "provisioningState": "Succeeded"
+                        }
+                    ]
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain::flashy-cosmos",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "backupPolicy": [],
+                    "capabilities": [],
+                    "capacity": [],
+                    "consistencyPolicy": [],
+                    "createMode": [],
+                    "databaseAccountOfferType": [],
+                    "defaultIdentity": [],
+                    "enableFreeTier": [],
+                    "kind": [],
+                    "locations": [],
+                    "minimalTlsVersion": [],
+                    "publicNetworkAccess": [],
+                    "resourceGroupName": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                    ],
+                    "tags": []
+                },
+                "created": "2025-10-07T23:42:31.516671668Z",
+                "modified": "2025-10-07T23:42:31.516671668Z",
+                "sourcePosition": "project:///../modules/storage.py#78",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///../modules/storage.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///__main__.py#167"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourcegroups/flashy-storage-centralusc2381b40/providers/Microsoft.ManagedIdentity/userAssignedIdentities/flashy-identityf9ee4730",
+                "type": "azure-native:managedidentity:UserAssignedIdentity",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2023-01-31",
+                    "location": "centralus",
+                    "resourceGroupName": "flashy-storage-centralusc2381b40",
+                    "resourceName": "flashy-identityf9ee4730",
+                    "tags": {
+                        "storageAccount": "flashystoracct9c972529"
+                    }
+                },
+                "outputs": {
+                    "azureApiVersion": "2023-01-31",
+                    "clientId": "c36a2e7c-8aae-4844-b88b-e90986ce5e2a",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourcegroups/flashy-storage-centralusc2381b40/providers/Microsoft.ManagedIdentity/userAssignedIdentities/flashy-identityf9ee4730",
+                    "location": "centralus",
+                    "name": "flashy-identityf9ee4730",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "tags": {
+                        "storageAccount": "flashystoracct9c972529"
+                    },
+                    "tenantId": "9ffd00e9-949c-4f58-a99c-e3068f50d922",
+                    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "location": [],
+                    "resourceGroupName": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                    ],
+                    "tags": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:45.864006537Z",
+                "modified": "2025-10-07T23:40:45.864006537Z",
+                "sourcePosition": "project:///__main__.py#177",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:storage:BlobContainer::images",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/blobServices/default/containers/images",
+                "type": "azure-native:storage:BlobContainer",
+                "inputs": {
+                    "accountName": "flashystoracct9c972529",
+                    "azureApiVersion": "2024-01-01",
+                    "containerName": "images",
+                    "publicAccess": "None",
+                    "resourceGroupName": "flashy-storage-centralusc2381b40"
+                },
+                "outputs": {
+                    "azureApiVersion": "2024-01-01",
+                    "defaultEncryptionScope": "$account-encryption-key",
+                    "deleted": false,
+                    "denyEncryptionScopeOverride": false,
+                    "etag": "\"0x8DE060957792334\"",
+                    "hasImmutabilityPolicy": false,
+                    "hasLegalHold": false,
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/blobServices/default/containers/images",
+                    "lastModifiedTime": "2025-10-08T01:23:52.0000000Z",
+                    "leaseState": "Available",
+                    "leaseStatus": "Unlocked",
+                    "legalHold": {
+                        "hasLegalHold": false,
+                        "tags": []
+                    },
+                    "name": "images",
+                    "publicAccess": "None",
+                    "remainingRetentionDays": 0,
+                    "type": "Microsoft.Storage/storageAccounts/blobServices/containers"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "accountName": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ],
+                    "publicAccess": [],
+                    "resourceGroupName": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup::flashy-storage-centralus"
+                    ]
+                },
+                "created": "2025-10-08T01:23:52.240766077Z",
+                "modified": "2025-10-08T01:23:52.240766077Z",
+                "sourcePosition": "project:///../modules/storage.py#166",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///../modules/storage.py#166"
+                    },
+                    {
+                        "sourcePosition": "project:///__main__.py#104"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity$azure-native:authorization:RoleAssignment::ManagedStorageBlobDataOwnerStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/bbdc6625-38a6-d538-7137-a057cfd4b33e",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleAssignmentName": "bbdc6625-38a6-d538-7137-a057cfd4b33e",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:47.9772301Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/bbdc6625-38a6-d538-7137-a057cfd4b33e",
+                    "name": "bbdc6625-38a6-d538-7137-a057cfd4b33e",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:47.9772301Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity"
+                    ],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:52.247871978Z",
+                "modified": "2025-10-07T23:40:52.247871978Z",
+                "sourcePosition": "project:///__main__.py#224",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#224"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:authorization:RoleAssignment::UserStorageBlobDataOwnerStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/151f0cbd-4e81-0d9c-0f86-c97e1795ce00",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleAssignmentName": "151f0cbd-4e81-0d9c-0f86-c97e1795ce00",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:32.5503829Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/151f0cbd-4e81-0d9c-0f86-c97e1795ce00",
+                    "name": "151f0cbd-4e81-0d9c-0f86-c97e1795ce00",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:32.5503829Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:33.763947435Z",
+                "modified": "2025-10-07T23:40:33.763947435Z",
+                "sourcePosition": "project:///__main__.py#233",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#233"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity$azure-native:authorization:RoleAssignment::ManagedStorageBlobDataContributorStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/c54a2aa7-d2a7-fd1f-14c5-d86ee62894cf",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleAssignmentName": "c54a2aa7-d2a7-fd1f-14c5-d86ee62894cf",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:48.4834321Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/c54a2aa7-d2a7-fd1f-14c5-d86ee62894cf",
+                    "name": "c54a2aa7-d2a7-fd1f-14c5-d86ee62894cf",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:48.4834321Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity"
+                    ],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:41:03.624529997Z",
+                "modified": "2025-10-07T23:41:03.624529997Z",
+                "sourcePosition": "project:///__main__.py#224",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#224"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:authorization:RoleAssignment::UserStorageBlobDataContributorStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/6f2b6d90-e4f0-c00e-8b38-21d84e1573b5",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleAssignmentName": "6f2b6d90-e4f0-c00e-8b38-21d84e1573b5",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:32.8626619Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/6f2b6d90-e4f0-c00e-8b38-21d84e1573b5",
+                    "name": "6f2b6d90-e4f0-c00e-8b38-21d84e1573b5",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:32.8626619Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:35.005457466Z",
+                "modified": "2025-10-07T23:40:35.005457466Z",
+                "sourcePosition": "project:///__main__.py#233",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#233"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity$azure-native:authorization:RoleAssignment::ManagedStorageQueueDataContributorStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/c0eb7779-8131-223f-7122-fbe750a30850",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleAssignmentName": "c0eb7779-8131-223f-7122-fbe750a30850",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:47.5541710Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/c0eb7779-8131-223f-7122-fbe750a30850",
+                    "name": "c0eb7779-8131-223f-7122-fbe750a30850",
+                    "principalId": "e4336efa-5bbc-41ea-803d-c647e520e54c",
+                    "principalType": "ServicePrincipal",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:47.5541710Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity",
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:managedidentity:UserAssignedIdentity::flashy-identity"
+                    ],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:48.726719528Z",
+                "modified": "2025-10-07T23:40:48.726719528Z",
+                "sourcePosition": "project:///__main__.py#224",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#224"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            },
+            {
+                "urn": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount$azure-native:authorization:RoleAssignment::UserStorageQueueDataContributorStorage",
+                "custom": true,
+                "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/53ccec6a-ba8e-21e6-256d-5f396c46fd36",
+                "type": "azure-native:authorization:RoleAssignment",
+                "inputs": {
+                    "__createBeforeDelete": true,
+                    "azureApiVersion": "2022-04-01",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleAssignmentName": "53ccec6a-ba8e-21e6-256d-5f396c46fd36",
+                    "roleDefinitionId": "/subscription/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529"
+                },
+                "outputs": {
+                    "azureApiVersion": "2022-04-01",
+                    "createdBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "createdOn": "2025-10-07T23:40:32.8147931Z",
+                    "id": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529/providers/Microsoft.Authorization/roleAssignments/53ccec6a-ba8e-21e6-256d-5f396c46fd36",
+                    "name": "53ccec6a-ba8e-21e6-256d-5f396c46fd36",
+                    "principalId": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "principalType": "User",
+                    "roleDefinitionId": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88",
+                    "scope": "/subscriptions/897cf406-9dc2-4bb6-90a1-89243710ee08/resourceGroups/flashy-storage-centralusc2381b40/providers/Microsoft.Storage/storageAccounts/flashystoracct9c972529",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "updatedBy": "076e9c50-d2e6-4555-86c1-715bf0aa4cf9",
+                    "updatedOn": "2025-10-07T23:40:32.8147931Z"
+                },
+                "parent": "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct",
+                "dependencies": [
+                    "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                ],
+                "provider": "urn:pulumi:dev::storage-works::pulumi:providers:azure-native::default_3_8_0::b20de134-4b5d-4112-b09a-011f45e325a4",
+                "propertyDependencies": {
+                    "principalId": [],
+                    "principalType": [],
+                    "roleDefinitionId": [],
+                    "scope": [
+                        "urn:pulumi:dev::storage-works::azure-native:resources:ResourceGroup$flash1212:storage:StorageChain$azure-native:storage:StorageAccount::flashystoracct"
+                    ]
+                },
+                "created": "2025-10-07T23:40:36.845644891Z",
+                "modified": "2025-10-07T23:40:36.845644891Z",
+                "sourcePosition": "project:///__main__.py#233",
+                "stackTrace": [
+                    {
+                        "sourcePosition": "project:///__main__.py#233"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#86"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/runpy.py#306"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#188"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#206"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#177"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#78"
+                    },
+                    {
+                        "sourcePosition": "project:///../.venv-wsl/lib/python3.10/site-packages/pulumi/runtime/stack.py#180"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/events.py#80"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#1896"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#600"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pyenv/versions/3.10.5/lib/python3.10/asyncio/base_events.py#633"
+                    },
+                    {
+                        "sourcePosition": "project:///../../../../../../../home/flash1212/.pulumi/bin/pulumi-language-python-exec#232"
+                    }
+                ]
+            }
+        ]
+    }
+}
