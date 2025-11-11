@@ -1,0 +1,127 @@
+module servicebus
+typealias PublicNetworkAccess = "Enabled"|"Disabled"|"SecuredByPerimeter"
+typealias SkuName = "Basic"|"Standard"|"Premium"
+typealias Status = "Active"|"Creating"|"Deleting"|"Disabled"|"Restoring"|"ReceiveDisabled"|"Renaming"|"SendDisabled"|"Unknown"
+
+typealias LowerCaseConstraint = String(matches(Regex("^[a-z]+[\\-a-z]*")))
+
+typealias NamespaceNameContainsConstraint = LowerCaseConstraint(!contains("namespace"))
+typealias NamespaceName = NamespaceNameContainsConstraint(6 <= length && length <= 36)
+
+typealias TopicNameContainsConstraint = LowerCaseConstraint(!contains("topic"))
+typealias TopicName = TopicNameContainsConstraint(1 <= length && length <= 260)
+
+typealias SubscriptionNameContainsContraint = LowerCaseConstraint(!contains("sub") && !contains("subscription"))
+typealias SubscriptionName = SubscriptionNameContainsContraint(1 <= length && length <= 50)
+
+typealias QueueNameContainsContraint = LowerCaseConstraint(!contains("queue"))
+typealias QueueName = QueueNameContainsContraint(1 <= length && length <= 260)
+
+typealias AuthNameContainsContraint = LowerCaseConstraint(!contains("auth") && !contains("authorization"))
+typealias AuthName = AuthNameContainsContraint(1 <= length && length <= 50)
+
+class AuthorizationRule {
+  name: AuthName
+  listen: Boolean = true
+  send: Boolean = true
+  manage: Boolean = true
+  rights: Listing<String> = new Mapping{
+    ["Send"] = send
+    ["Listen"] = listen
+    ["Manage"] = manage
+  }
+  .toMap()
+  .entries.filter((entry) -> entry.value)
+  .map((entry) -> entry.key)
+  .toListing()
+}
+
+class Sku {
+  name: SkuName = "Standard"
+  tier: String = name
+  capacity: Int?
+}
+
+class SubscriptionOptions {
+  autoDeleteOnIdle: String?
+  deadLetteringOnFilterEvaluationExceptions: Boolean?
+  deadLetteringOnMessageExpiration: Boolean?
+  defaultMessageTtl: String?
+  duplicateDetectionHistoryTimeWindow: String?
+  enabledBatchOperations: Boolean?
+  forwardDeadLetteredMessagesTo: String?
+  forwardTo: String?
+  isClientAffine: Boolean?
+  lockDuration: String?
+  maxDeliveryCount: Int?
+  requiresSession: Boolean?
+  status: Status = "Active"
+}
+
+class TopicOptions {
+  autoDeleteOnIdle: String?
+  defaultMessageTtl: String?
+  duplicateDetectionHistoryTimeWindow: String?
+  enableBatchedOperations: Boolean?
+  enableExpress: Boolean?
+  enablePartitioning: Boolean?
+  maxMessageSizeInKilobytes: Float?
+  maxSizeInMegabytes: Int?
+  requiresDuplicateDetection: Boolean?
+  status: Status = "Active"
+  supportOrdering: Boolean?
+}
+
+class QueueOptions {
+  autoDeleteOnIdle: String?
+  deadLetteringOnMessageExpiration: Boolean?
+  defaultMessageTtl: String?
+  duplicateDetectionHistoryTimeWindow: String?
+  enableBatchedOperations: Boolean?
+  enableExpress: Boolean?
+  enablePartitioning: Boolean?
+  forwardDeadLetteredMessagesTo: String?
+  forwardTo: String?
+  lockDuration: String?
+  maxDeliveryCount: Int?
+  maxMessageSizeInKilobytes: Float?
+  maxSizeInMegabytes: Int?
+  requiresDuplicateDetection: Boolean?
+  requiresSession: Boolean?
+  status: Status = "Active"
+}
+
+class Queue {
+  name: QueueName
+  options: QueueOptions
+  authorizations: Listing<AuthorizationRule>?
+}
+
+class Subscription {
+  name: SubscriptionName
+  options: SubscriptionOptions
+}
+
+class Topic {
+  name: TopicName
+  options: TopicOptions
+  authorizations: Listing<AuthorizationRule>?
+  subscriptions: Listing<Subscription>
+}
+
+class NamespaceOptions {
+  alternateName: String?
+  publicNetworkAccess: PublicNetworkAccess = "Enabled"
+  sku: Sku
+  zoneRedundant: Boolean?
+}
+
+class Namespace {
+  namePrefix: NamespaceName
+  options: NamespaceOptions
+  authorizations: Listing<AuthorizationRule>?
+  queues: Listing<Queue>?
+  topics: Listing<Topic>?
+}
+
+namespaces: Listing<Namespace>

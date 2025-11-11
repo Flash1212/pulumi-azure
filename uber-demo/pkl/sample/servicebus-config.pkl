@@ -1,0 +1,87 @@
+amends "../schema/servicebus-schema.pkl"
+
+namespaces {
+  new Namespace {
+    namePrefix = "name-test-one"
+    options = new NamespaceOptions {
+      sku = new Sku {
+        name = "Standard"
+      }
+    }
+    authorizations {
+      new AuthorizationRule {
+          name = "root-conn-one"
+          listen = true
+          send = true
+      }
+    }
+    topics {
+      new Topic {
+        name = "sample"
+        authorizations {
+          new AuthorizationRule {
+            name = "sample-conn-one"
+            listen = true
+            send = true
+          }
+          new AuthorizationRule {
+            name = "sample-conn-two"
+            listen = true
+            send = true
+          }
+        }
+        subscriptions {
+          new Subscription {
+            name = "sample"
+          }
+        }
+      }
+    }
+    queues {
+      new Queue {
+        name = "sample"
+      }
+    }
+  }
+  new Namespace {
+    namePrefix = "name-test-two"
+    options = new NamespaceOptions {
+      sku = new Sku {
+        name = "Standard"
+      }
+    }
+    topics {
+      new Topic {
+        name = "sample"
+        options = new TopicOptions {
+          enablePartitioning = true
+          maxSizeInMegabytes = 1024
+        }
+        authorizations {
+          new AuthorizationRule {
+            name = "sample-conn-three"
+            listen = true
+            send = true
+          }
+        }
+        subscriptions {
+          new Subscription {
+            name = "sample"
+            options = new SubscriptionOptions {
+              maxDeliveryCount = 10
+            }
+          }
+        }
+      }
+    }
+    queues {
+      new Queue {
+        name = "sample"
+        options = new QueueOptions {
+          enablePartitioning = true
+          maxSizeInMegabytes = 1024
+        }
+      }
+    }
+  }
+}

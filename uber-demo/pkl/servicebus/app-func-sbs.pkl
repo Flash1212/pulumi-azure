@@ -1,0 +1,62 @@
+amends "../schema/servicebus-schema.pkl"
+
+namespaces {
+  new Namespace {
+    namePrefix = "order-sbs"
+    options = new NamespaceOptions {
+      sku = new Sku {
+        name = "Standard"
+      }
+    }
+    authorizations {
+      new AuthorizationRule {
+        name = "root-access"
+        listen = true
+        manage = true
+        send = true
+      }
+    }
+    topics {
+      new Topic {
+        name = "order-processing"
+        authorizations {
+          new AuthorizationRule {
+            name = "orders-topic-access"
+            listen = true
+            send = true
+          }
+        }
+        subscriptions {
+          new Subscription {
+            name = "high-priority"
+            options = new SubscriptionOptions {
+              deadLetteringOnMessageExpiration = true
+            }
+          }
+          new Subscription {
+            name = "normal-priority"
+            options = new SubscriptionOptions {
+              deadLetteringOnMessageExpiration = true
+            }
+          }
+        }
+      }
+    }
+    queues {
+      new Queue {
+        name = "orders"
+        options = new QueueOptions {
+          deadLetteringOnMessageExpiration = true
+        }
+        authorizations {
+          new AuthorizationRule {
+            name = "orders-queue-access"
+            listen = true
+            manage = true
+            send = true
+          }
+        }
+      }
+    }
+  }
+}

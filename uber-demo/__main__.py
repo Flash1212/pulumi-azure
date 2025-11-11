@@ -62,6 +62,7 @@ identities: list[IdentityOutput] = [
     )
 ]
 
+
 def add_secret(
     secret_name: str,
     secret_value: Input[str],
@@ -156,13 +157,13 @@ def define_role_assignments(
                     {
                         "role_name": "Storage Blob Data Owner",
                         "role_id": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b",
-                        "scope": storage_outputs.storage_chain.storage_account.id,
+                        "scope": storage_outputs.storage_chain.storage_account.id,  # noqa: E501
                         "name_postfix": "Storage",
                     },
                     {
                         "role_name": "Storage Blob Data Contributor",
                         "role_id": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
-                        "scope": storage_outputs.storage_chain.storage_account.id,
+                        "scope": storage_outputs.storage_chain.storage_account.id,  # noqa: E501
                         "name_postfix": "Storage",
                     },
                 ]
