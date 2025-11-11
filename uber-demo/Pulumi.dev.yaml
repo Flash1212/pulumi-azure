@@ -20,3 +20,5 @@ config:
   uber-demo:func_runtime_args:
       name: "dotnet-isolated"
       version: "8.0"
+  # PKL Config Files
+  uber-demo:servicebus_config_file: "local_configs/app-func-sbs.pkl"
