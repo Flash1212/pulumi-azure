@@ -13,6 +13,7 @@ from pulumi_configs import (
     create_function_app,
     create_key_vault,
     create_log_analytics,
+    create_servicebus,
     create_storage_account,
     blob_names,
     func_app_name,
@@ -20,6 +21,7 @@ from pulumi_configs import (
     location,
     queue_names,
     resource_group_prefix,
+    servicebus_config_file,
     subscription_id,
 )
 from pulumi import export, Input, Output, ResourceOptions
@@ -36,11 +38,17 @@ from pulumi_azure_native import (
     web,
 )
 
+import configs.generated.servicebus_pkl as psb
+
+from utils.module_dataclasses import ServiceBusArgs
+
 from local_dataclasses import (
     AnalyticsAndLogsOutputs,
     IdentityOutput,
     StorageOutputs,
 )
+
+from modules.messaging import ServiceBus
 
 from modules.storage import (
     StorageChain,
@@ -48,6 +56,8 @@ from modules.storage import (
     StorageAccountDefaults,
     StorageComponentArgs,
 )
+
+from utils.utils import load_pkl_config
 
 ### Setup Resource Group
 resource_group = resources.ResourceGroup(f"{resource_group_prefix}-{location}")
@@ -421,6 +431,32 @@ def setup_roles(
         )
 
 
+def setup_servicebus(
+    create_servicebus: bool,
+    default_opts: ResourceOptions,
+    default_tags: dict,
+    prefix: str,
+    resource_group_name: Output[str],
+) -> ServiceBus | None:
+    if not create_servicebus:
+        return None
+
+    servicebus_configs: list[psb.Namespace] = load_pkl_config(
+        resource_type="servicebus", pkl_config_file=servicebus_config_file
+    )
+
+    return ServiceBus(
+        name=prefix,
+        args=ServiceBusArgs(
+            location=location,
+            resource_group_name=resource_group_name,
+            pkl_configs=servicebus_configs,
+            tags=default_tags,
+        ),
+        opts=default_opts,
+    )
+
+
 def setup_storage(
     create: bool,
     default_opts: ResourceOptions,
@@ -641,6 +677,14 @@ storage_outputs = setup_storage(
     default_tags=default_tags,
     resource_group_name=resource_group.name,
     prefix=resource_prefix,
+)
+
+servicebus_outputs = setup_servicebus(
+    create_servicebus=create_servicebus,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    prefix=resource_prefix,
+    resource_group_name=resource_group.name,
 )
 
 analytics_and_logs = setup_anlytics_and_insights(
