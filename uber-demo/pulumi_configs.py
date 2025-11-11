@@ -30,3 +30,7 @@ queue_names: list = func_app_configs.require_object("queue_names")
 func_runtime_args: dict | None = func_app_configs.get_object(
     "func_runtime_args"
 )
+# Pkl Config Files
+servicebus_config_file: str = ""
+if create_servicebus:
+    servicebus_config_file = func_app_configs.require("servicebus_config_file")

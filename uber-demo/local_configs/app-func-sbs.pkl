@@ -1,8 +1,8 @@
-amends "../schema/servicebus-schema.pkl"
+amends "../../configs/schema/servicebus-schema.pkl"
 
 namespaces {
   new Namespace {
-    namePrefix = "order-sbs"
+    namePrefix = "order"
     options = new NamespaceOptions {
       sku = new Sku {
         name = "Standard"
@@ -10,7 +10,7 @@ namespaces {
     }
     authorizations {
       new AuthorizationRule {
-        name = "root-access"
+        name = "root"
         listen = true
         manage = true
         send = true
@@ -21,7 +21,7 @@ namespaces {
         name = "order-processing"
         authorizations {
           new AuthorizationRule {
-            name = "orders-topic-access"
+            name = "orders"
             listen = true
             send = true
           }
@@ -50,7 +50,7 @@ namespaces {
         }
         authorizations {
           new AuthorizationRule {
-            name = "orders-queue-access"
+            name = "orders"
             listen = true
             manage = true
             send = true

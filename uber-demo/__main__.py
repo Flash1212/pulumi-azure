@@ -6,7 +6,7 @@ Pulumi program to create an uber Azure App Function
 import modulepath_fixer  # noqa: F401
 from typing import Type
 
-from configs import (
+from pulumi_configs import (
     app_svc_plan_name,
     create_app_insights,
     create_event_grid,
