@@ -1,9 +1,13 @@
 module servicebus
+typealias FilterType = "SqlFilter"|"CorrelationFilter"
 typealias PublicNetworkAccess = "Enabled"|"Disabled"|"SecuredByPerimeter"
 typealias SkuName = "Basic"|"Standard"|"Premium"
 typealias Status = "Active"|"Creating"|"Deleting"|"Disabled"|"Restoring"|"ReceiveDisabled"|"Renaming"|"SendDisabled"|"Unknown"
 
 typealias LowerCaseConstraint = String(matches(Regex("^[a-z]+[\\-a-z]*")))
+
+typealias AuthNameContainsContraint = LowerCaseConstraint(!contains("auth") && !contains("authorization"))
+typealias AuthName = AuthNameContainsContraint(1 <= length && length <= 50)
 
 typealias NamespaceNameContainsConstraint = LowerCaseConstraint(!contains("namespace"))
 typealias NamespaceName = NamespaceNameContainsConstraint(6 <= length && length <= 36)
@@ -16,9 +20,6 @@ typealias SubscriptionName = SubscriptionNameContainsContraint(1 <= length && le
 
 typealias QueueNameContainsContraint = LowerCaseConstraint(!contains("queue"))
 typealias QueueName = QueueNameContainsContraint(1 <= length && length <= 260)
-
-typealias AuthNameContainsContraint = LowerCaseConstraint(!contains("auth") && !contains("authorization"))
-typealias AuthName = AuthNameContainsContraint(1 <= length && length <= 50)
 
 class AuthorizationRule {
   name: AuthName
@@ -56,6 +57,39 @@ class SubscriptionOptions {
   maxDeliveryCount: Int?
   requiresSession: Boolean?
   status: Status = "Active"
+}
+
+class SubscriptionRule {
+  action: RuleAction
+  correlationFilter: RuleCorrelationFilter
+  filterType: FilterType
+  rule_name: String
+  SqlFilter: RuleSqlFilter
+}
+
+class RuleAction {
+  compatibilityLevel: Int?
+  requiresPreProcessing: Boolean?
+  sqlExpression: String?
+}
+
+class RuleCorrelationFilter {
+  contentType: String?
+  correlationId: String?
+  label: String?
+  messageId: String?
+  properties: Map<String, String>?
+  replyTo: String?
+  replyToSessionId: String?
+  requiresPreprocessing: Boolean?
+  sessionId: String?
+  to: String?
+}
+
+class RuleSqlFilter {
+  compatibilityLevel: Int?
+  requiresPreProcessing: Boolean?
+  sqlExpression: String?
 }
 
 class TopicOptions {
@@ -100,6 +134,7 @@ class Queue {
 class Subscription {
   name: SubscriptionName
   options: SubscriptionOptions
+  rules: Listing<SubscriptionRule>
 }
 
 class Topic {

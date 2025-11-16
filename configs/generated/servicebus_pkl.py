@@ -7,7 +7,15 @@ from typing import Any, Dict, List, Literal, Optional, Set, Union
 import pkl
 
 
+FilterType = Literal["SqlFilter", "CorrelationFilter"]
+PublicNetworkAccess = Literal["Enabled", "Disabled", "SecuredByPerimeter"]
+SkuName = Literal["Basic", "Standard", "Premium"]
+Status = Literal["Active", "Creating", "Deleting", "Disabled", "Restoring", "ReceiveDisabled", "Renaming", "SendDisabled", "Unknown"]
+
 LowerCaseConstraint = str
+
+AuthNameContainsContraint = LowerCaseConstraint
+AuthName = AuthNameContainsContraint
 
 NamespaceNameContainsConstraint = LowerCaseConstraint
 NamespaceName = NamespaceNameContainsConstraint
@@ -21,12 +29,67 @@ SubscriptionName = SubscriptionNameContainsContraint
 QueueNameContainsContraint = LowerCaseConstraint
 QueueName = QueueNameContainsContraint
 
-AuthNameContainsContraint = LowerCaseConstraint
-AuthName = AuthNameContainsContraint
 
-PublicNetworkAccess = Literal["Enabled", "Disabled", "SecuredByPerimeter"]
-SkuName = Literal["Basic", "Standard", "Premium"]
-Status = Literal["Active", "Creating", "Deleting", "Disabled", "Restoring", "ReceiveDisabled", "Renaming", "SendDisabled", "Unknown"]
+@dataclass
+class RuleSqlFilter:
+    compatibilityLevel: Optional[int]
+
+    requiresPreProcessing: Optional[bool]
+
+    sqlExpression: Optional[str]
+
+    _registered_identifier = "servicebus#RuleSqlFilter"
+
+
+@dataclass
+class RuleCorrelationFilter:
+    contentType: Optional[str]
+
+    correlationId: Optional[str]
+
+    label: Optional[str]
+
+    messageId: Optional[str]
+
+    properties: Optional[Dict[str, str]]
+
+    replyTo: Optional[str]
+
+    replyToSessionId: Optional[str]
+
+    requiresPreprocessing: Optional[bool]
+
+    sessionId: Optional[str]
+
+    to: Optional[str]
+
+    _registered_identifier = "servicebus#RuleCorrelationFilter"
+
+
+@dataclass
+class RuleAction:
+    compatibilityLevel: Optional[int]
+
+    requiresPreProcessing: Optional[bool]
+
+    sqlExpression: Optional[str]
+
+    _registered_identifier = "servicebus#RuleAction"
+
+
+@dataclass
+class SubscriptionRule:
+    action: RuleAction
+
+    correlationFilter: RuleCorrelationFilter
+
+    filterType: FilterType
+
+    rule_name: str
+
+    SqlFilter: RuleSqlFilter
+
+    _registered_identifier = "servicebus#SubscriptionRule"
 
 
 @dataclass
@@ -65,6 +128,8 @@ class Subscription:
     name: SubscriptionName
 
     options: SubscriptionOptions
+
+    rules: List[SubscriptionRule]
 
     _registered_identifier = "servicebus#Subscription"
 
