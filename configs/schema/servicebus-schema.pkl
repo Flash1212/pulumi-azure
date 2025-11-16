@@ -60,16 +60,16 @@ class SubscriptionOptions {
 }
 
 class SubscriptionRule {
-  action: RuleAction
-  correlationFilter: RuleCorrelationFilter
-  filterType: FilterType
+  action: RuleAction?
+  correlationFilter: RuleCorrelationFilter?
+  filterType: FilterType?
   rule_name: String
-  SqlFilter: RuleSqlFilter
+  sqlFilter: RuleSqlFilter?
 }
 
 class RuleAction {
   compatibilityLevel: Int?
-  requiresPreProcessing: Boolean?
+  requiresPreprocessing: Boolean?
   sqlExpression: String?
 }
 
@@ -88,7 +88,7 @@ class RuleCorrelationFilter {
 
 class RuleSqlFilter {
   compatibilityLevel: Int?
-  requiresPreProcessing: Boolean?
+  requiresPreprocessing: Boolean?
   sqlExpression: String?
 }
 

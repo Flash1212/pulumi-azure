@@ -70,7 +70,7 @@ class ServiceBus(ComponentResource):
                 for auth in namespace.authorizations:
                     self.__create_authorization_rule(
                         name=auth.name,
-                        namespace=svc_bus,
+                        namespace_name=svc_bus.name,
                         rights=auth.rights,
                         parent=svc_bus,
                         secret_name=f"{auth.name}{conn_str_suffix}",
@@ -83,18 +83,27 @@ class ServiceBus(ComponentResource):
                         for auth in topic.authorizations:
                             self.__create_authorization_rule(
                                 name=auth.name,
-                                namespace=svc_bus,
+                                namespace_name=svc_bus.name,
                                 rights=auth.rights,
                                 parent=tp,
                                 secret_name=f"{auth.name}{conn_str_suffix}",
                             )
                     if topic.subscriptions:
                         for subscription in topic.subscriptions:
-                            self.__create_subscription(
+                            sub = self.__create_subscription(
                                 namespace=svc_bus,
                                 subscription=subscription,
                                 parent=tp,
                             )
+                            if subscription.rules:
+                                for rule in subscription.rules:
+                                    self.__create_subscription_rule(
+                                        namespace_name=svc_bus.name,
+                                        rule=rule,
+                                        parent=sub,
+                                        subscription_name=sub.name,
+                                        topic_name=tp.name,
+                                    )
 
             if namespace.queues:
                 for queue in namespace.queues:
@@ -103,7 +112,7 @@ class ServiceBus(ComponentResource):
                         for auth in queue.authorizations:
                             self.__create_authorization_rule(
                                 name=auth.name,
-                                namespace=svc_bus,
+                                namespace_name=svc_bus.name,
                                 rights=auth.rights,
                                 parent=sbq,
                                 secret_name=f"{auth.name}{conn_str_suffix}",
@@ -230,10 +239,61 @@ class ServiceBus(ComponentResource):
             opts=ResourceOptions(parent=parent),
         )
 
+    def __create_subscription_rule(
+        self,
+        namespace_name: Output[str],
+        rule: psb.SubscriptionRule,
+        parent: asb.Subscription,
+        subscription_name: Output[str],
+        topic_name: Output[str],
+    ):
+        action_args = None
+        if rule.action:
+            action_args = asb.ActionArgs(
+                compatibility_level=rule.action.compatibilityLevel,
+                requires_preprocessing=rule.action.requiresPreprocessing,
+                sql_expression=rule.action.sqlExpression,
+            )
+        correlation_filter_args = None
+        if rule.correlationFilter:
+            correlation_filter_args = asb.CorrelationFilterArgs(
+                correlation_id=rule.correlationFilter.correlationId,
+                content_type=rule.correlationFilter.contentType,
+                label=rule.correlationFilter.label,
+                message_id=rule.correlationFilter.messageId,
+                properties=rule.correlationFilter.properties,
+                reply_to=rule.correlationFilter.replyTo,
+                reply_to_session_id=rule.correlationFilter.replyToSessionId,
+                requires_preprocessing=rule.correlationFilter.requiresPreprocessing,
+                session_id=rule.correlationFilter.sessionId,
+                to=rule.correlationFilter.to,
+            )
+        sql_filter_args = None
+        if rule.sqlFilter:
+            sql_filter_args = asb.SqlFilterArgs(
+                compatibility_level=rule.sqlFilter.compatibilityLevel,
+                requires_preprocessing=rule.sqlFilter.requiresPreprocessing,
+                sql_expression=rule.sqlFilter.sqlExpression,
+            )
+
+        return asb.Rule(
+            f"{rule.rule_name}-rule",
+            namespace_name=namespace_name,
+            resource_group_name=self.resource_group_name,
+            subscription_name=subscription_name,
+            topic_name=topic_name,
+            action=action_args,
+            correlation_filter=correlation_filter_args,
+            filter_type=asb.FilterType(rule.filterType),
+            rule_name=rule.rule_name,
+            sql_filter=sql_filter_args,
+            opts=ResourceOptions(parent=parent),
+        )
+
     def __create_authorization_rule(
         self,
         name: str,
-        namespace: asb.Namespace,
+        namespace_name: Output[str],
         parent: asb.Queue | asb.Topic | asb.Namespace,
         rights: list[str],
         secret_name: str,
@@ -258,7 +318,7 @@ class ServiceBus(ComponentResource):
             rule = asb.QueueAuthorizationRule(
                 f"{name}-auth",
                 asb.QueueAuthorizationRuleArgs(
-                    namespace_name=namespace.name,
+                    namespace_name=namespace_name,
                     resource_group_name=self.resource_group_name,
                     queue_name=parent.name,
                     authorization_rule_name=name,
@@ -269,7 +329,7 @@ class ServiceBus(ComponentResource):
 
             keys = asb.list_queue_keys_output(
                 authorization_rule_name=rule.name,
-                namespace_name=namespace.name,
+                namespace_name=namespace_name,
                 queue_name=parent.name,
                 resource_group_name=self.resource_group_name,
             )
@@ -277,7 +337,7 @@ class ServiceBus(ComponentResource):
             rule = asb.TopicAuthorizationRule(
                 f"{name}-auth",
                 asb.TopicAuthorizationRuleArgs(
-                    namespace_name=namespace.name,
+                    namespace_name=namespace_name,
                     resource_group_name=self.resource_group_name,
                     topic_name=parent.name,
                     authorization_rule_name=name,
@@ -288,14 +348,14 @@ class ServiceBus(ComponentResource):
             keys = asb.list_topic_keys_output(
                 authorization_rule_name=rule.name,
                 topic_name=parent.name,
-                namespace_name=namespace.name,
+                namespace_name=namespace_name,
                 resource_group_name=self.resource_group_name,
             )
         elif isinstance(parent, asb.Namespace):
             rule = asb.NamespaceAuthorizationRule(
                 f"{name}-auth",
                 asb.NamespaceAuthorizationRuleArgs(
-                    namespace_name=namespace.name,
+                    namespace_name=namespace_name,
                     resource_group_name=self.resource_group_name,
                     authorization_rule_name=name,
                     rights=[asb.AccessRights(right) for right in rights],
@@ -304,7 +364,7 @@ class ServiceBus(ComponentResource):
             )
             keys = asb.list_namespace_keys_output(
                 authorization_rule_name=rule.name,
-                namespace_name=namespace.name,
+                namespace_name=namespace_name,
                 resource_group_name=self.resource_group_name,
             )
         self.primary_conn_strings.append(

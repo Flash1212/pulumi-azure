@@ -2,7 +2,7 @@ amends "../../configs/schema/servicebus-schema.pkl"
 
 namespaces {
   new Namespace {
-    namePrefix = "order"
+    namePrefix = "flashy-orders"
     options = new NamespaceOptions {
       sku = new Sku {
         name = "Standard"
@@ -32,11 +32,29 @@ namespaces {
             options = new SubscriptionOptions {
               deadLetteringOnMessageExpiration = true
             }
+            rules {
+              new SubscriptionRule {
+                rule_name = "high-priority-rule"
+                filterType = "SqlFilter"
+                sqlFilter = new RuleSqlFilter {
+                  sqlExpression = "Priority = 'High'"
+                }
+              }
+            }
           }
           new Subscription {
             name = "normal-priority"
             options = new SubscriptionOptions {
               deadLetteringOnMessageExpiration = true
+            }
+            rules {
+              new SubscriptionRule {
+                rule_name = "normal-priority-rule"
+                filterType = "SqlFilter"
+                sqlFilter = new RuleSqlFilter {
+                  sqlExpression = "Priority = 'Normal'"
+                }
+              }
             }
           }
         }

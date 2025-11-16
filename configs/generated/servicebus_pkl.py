@@ -34,7 +34,7 @@ QueueName = QueueNameContainsContraint
 class RuleSqlFilter:
     compatibilityLevel: Optional[int]
 
-    requiresPreProcessing: Optional[bool]
+    requiresPreprocessing: Optional[bool]
 
     sqlExpression: Optional[str]
 
@@ -70,7 +70,7 @@ class RuleCorrelationFilter:
 class RuleAction:
     compatibilityLevel: Optional[int]
 
-    requiresPreProcessing: Optional[bool]
+    requiresPreprocessing: Optional[bool]
 
     sqlExpression: Optional[str]
 
@@ -79,15 +79,15 @@ class RuleAction:
 
 @dataclass
 class SubscriptionRule:
-    action: RuleAction
+    action: Optional[RuleAction]
 
-    correlationFilter: RuleCorrelationFilter
+    correlationFilter: Optional[RuleCorrelationFilter]
 
-    filterType: FilterType
+    filterType: Optional[FilterType]
 
     rule_name: str
 
-    SqlFilter: RuleSqlFilter
+    sqlFilter: Optional[RuleSqlFilter]
 
     _registered_identifier = "servicebus#SubscriptionRule"
 
