@@ -56,6 +56,8 @@ class StorageAccountDefaults:
     network_rule_set: storage.NetworkRuleSetArgs = storage.NetworkRuleSetArgs(
         bypass="AzureServices",
         default_action=storage.DefaultAction.ALLOW,
+        ip_rules=[],
+        virtual_network_rules=[],
     )
     public_network_access: storage.PublicNetworkAccess = (
         storage.PublicNetworkAccess.ENABLED

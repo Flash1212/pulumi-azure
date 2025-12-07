@@ -617,14 +617,16 @@ def setup_web_app(
         resource_group_name=resource_group.name,
         server_farm_id=app_svc_plan.id,
         site_config=web.SiteConfigArgs(
-            app_settings=[],
+            # app_settings will be managed separately
             cors=web.CorsSettingsArgs(
                 allowed_origins=["https://portal.azure.com"]
             ),
             min_tls_version=web.SupportedTlsVersions.SUPPORTED_TLS_VERSIONS_1_2,
         ),
         tags=func_app_tags,
-        opts=ResourceOptions(parent=app_svc_plan),
+        opts=ResourceOptions(
+            parent=app_svc_plan, ignore_changes=["siteConfig.appettings"]
+        ),
     )
     export("default_host_name", func_app.default_host_name)
 
