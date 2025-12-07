@@ -156,7 +156,6 @@ def define_akv_permissions() -> dict[str, keyvault.PermissionsArgs]:
 def define_role_assignments(
     app_insights: applicationinsights.Component | None,
     storage_outputs: StorageOutputs | None,
-    event_grid_topic: eventgrid.Topic | None,
 ) -> list[dict]:
     role_assignments = []
 
@@ -198,24 +197,6 @@ def define_role_assignments(
             },
         )
 
-    if isinstance(event_grid_topic, eventgrid.Topic):
-        role_assignments.append(
-            {
-                "role_name": "EventGrid Data Sender",
-                "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
-                "scope": event_grid_topic.id,
-                "name_postfix": "EvntGrid",
-            }
-        )
-        if storage_outputs:
-            role_assignments.append(
-                {
-                    "role_name": "EventGrid Data Sender",
-                    "role_id": "d5a91429-5739-47e2-a06b-3470a27159e7",
-                    "scope": storage_outputs.storage_chain.storage_account.id,
-                    "name_postfix": "Storage",
-                }
-            )
     return role_assignments
 
 
@@ -224,7 +205,6 @@ def define_app_settings(
     akv_secrets: dict[str, Input[str]] | None,
     storage_outputs: StorageOutputs | None,
     analytics_and_logs: AnalyticsAndLogsOutputs | None,
-    event_grid_topic: eventgrid.Topic | None,
 ) -> dict[str, Input[str]]:
     app_settings = {}
 
@@ -242,12 +222,6 @@ def define_app_settings(
                 ";Authorization=AAD",
             )
         )
-    if isinstance(event_grid_topic, eventgrid.Topic):
-        app_settings["FlashyEventGrid__topicEndpointUri"] = (
-            event_grid_topic.endpoint
-        )
-        app_settings["FlashyEventGrid__credential"] = "managedidentity"
-        app_settings["FlashyEventGrid__clientId"] = assigned_identity.client_id
     if storage_outputs:
         app_settings["AzureWebJobsStorage__accountName"] = (
             storage_outputs.storage_chain.storage_account.name
@@ -383,22 +357,17 @@ def setup_event_grid(
     location: str,
     resource_group_name: Output[str],
     prefix: str,
-) -> eventgrid.Topic | None:
+) -> eventgrid.SystemTopic | None:
     if not create_event_grid:
         return None
 
-    event_grid_topic = eventgrid.Topic(
+    event_grid_topic = eventgrid.SystemTopic(
         resource_name=f"{prefix}-event-topic",
-        data_residency_boundary=eventgrid.DataResidencyBoundary.WITHIN_REGION,
-        input_schema=eventgrid.InputSchema.EVENT_GRID_SCHEMA,
         location=location,
-        public_network_access=eventgrid.PublicNetworkAccess.ENABLED,
-        minimum_tls_version_allowed=eventgrid.TlsVersion.TLS_VERSION_1_2,
         resource_group_name=resource_group_name,
         tags=default_tags,
         opts=default_opts,
     )
-    export("eventgrid_topic_endpoint", event_grid_topic.endpoint)
 
     return event_grid_topic
 
@@ -746,7 +715,6 @@ role_assignments = define_role_assignments(
     if analytics_and_logs and analytics_and_logs.app_insights
     else None,
     storage_outputs=storage_outputs if storage_outputs else None,
-    event_grid_topic=event_grid_topic if event_grid_topic else None,
 )
 
 
@@ -820,7 +788,6 @@ if func_app:
         storage_outputs=storage_outputs,
         analytics_and_logs=analytics_and_logs,
         assigned_identity=assigned_identity,
-        event_grid_topic=event_grid_topic,
     )
 
     web_app_settings = setup_web_app_settings(
