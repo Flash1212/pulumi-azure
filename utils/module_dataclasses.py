@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Optional
 from pulumi import Input, Output
 
 import configs.generated.servicebus_pkl as psb
@@ -18,7 +18,7 @@ class SecretsObject:
             secrets. Defaults to {}.
     """
 
-    secrets: Dict[str, Input[str]]
+    secrets: dict[str, Input[str]]
     origin: str
     purpose: str
     custom_tags: Optional[dict[str, str]] = field(default_factory=dict)

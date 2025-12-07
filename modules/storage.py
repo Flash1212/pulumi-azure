@@ -1,7 +1,10 @@
+from typing import Optional
+
+from attr import dataclass, field
 from pulumi import ComponentResource, InvokeOptions, Output, ResourceOptions
 from pulumi_azure_native import cosmosdb, storage
-from attr import dataclass, field
-from typing import Optional
+
+from utils.module_dataclasses import SecretsObject
 
 
 @dataclass
@@ -140,15 +143,12 @@ class StorageChain(ComponentResource):
         self.storage_blob_containers: dict[str, storage.BlobContainer] = {}
         self.storage_queues: dict[str, storage.Queue] = {}
         self.storage_sas_urls: dict[str, Output[dict[str, Output[str]]]] = {}
+        self.storage_secrets: SecretsObject
 
         self.storage_account = storage.StorageAccount(
             resource_name=args.storage_account_args.name,
             **args.storage_account_args.args,
             opts=self.opts,
-        )
-        self.__get_keys_and_string(
-            account_name=self.storage_account.name,
-            resource_group_name=args.resource_group_name,
         )
 
         if args.storage_blob_properties_args:
@@ -178,6 +178,7 @@ class StorageChain(ComponentResource):
                     )
                 )
 
+        sas_secrets = {}
         if args.storage_container_sas_args:
             for sas in args.storage_container_sas_args:
                 sas_token_result = (
@@ -192,16 +193,14 @@ class StorageChain(ComponentResource):
                 sas_token = sas_token_result.apply(
                     lambda r: r.service_sas_token
                 )
-                self.storage_sas_urls[sas.name] = Output.secret(
-                    {
-                        "blob_sas_url": Output.concat(
-                            self.storage_account.primary_endpoints.blob,
-                            sas.name,
-                            "?",
-                            sas_token,
-                        ),
-                        "blob_sas_token_only": sas_token,
-                    }
+                sas_secrets[f"{sas.name}_sas_token"] = Output.secret(sas_token)
+                sas_secrets[f"{sas.name}_sas_url"] = Output.secret(
+                    Output.concat(
+                        self.storage_account.primary_endpoints.blob,
+                        sas.name,
+                        "?",
+                        sas_token,
+                    )
                 )
 
         if args.storage_queue_args:
@@ -215,10 +214,19 @@ class StorageChain(ComponentResource):
                     opts=ResourceOptions(parent=self.storage_account),
                 )
 
+        self.__get_and_set_secrets(
+            account_name=self.storage_account.name,
+            resource_group_name=args.resource_group_name,
+            sas_secrets=sas_secrets,
+        )
+
         self.register_outputs({})
 
-    def __get_keys_and_string(
-        self, account_name: Output[str], resource_group_name: Output[str]
+    def __get_and_set_secrets(
+        self,
+        account_name: Output[str],
+        resource_group_name: Output[str],
+        sas_secrets: dict[str, Output[str]] = {},
     ) -> None:
         self.storage_account_keys: Output[
             storage.ListStorageAccountKeysResult
@@ -228,14 +236,26 @@ class StorageChain(ComponentResource):
                 resource_group_name=resource_group_name,
             )
         )
-        self.primary_key: Output[str] = Output.secret(
+        primary_key: Output[str] = Output.secret(
             self.storage_account_keys.apply(lambda sak: sak.keys[0].value)
         )
-        self.storage_connection_string: Output[str] = Output.secret(
-            Output.concat(
-                "DefaultEndpointsProtocol=https;AccountName=",
-                self.storage_account.name,
-                ";AccountKey=",
-                Output.secret(self.primary_key),
-            )
+        secondary_key: Output[str] = Output.secret(
+            self.storage_account_keys.apply(lambda sak: sak.keys[1].value)
+        )
+        self.storage_connection_string: Output[str] = Output.concat(
+            "DefaultEndpointsProtocol=https;AccountName=",
+            self.storage_account.name,
+            ";AccountKey=",
+            Output.secret(primary_key),
+        )
+
+        self.storage_secrets = SecretsObject(
+            secrets={
+                "PrimaryStorageAccountKey": primary_key,
+                "SecondaryStorageAccountKey": secondary_key,
+                "StorageConnectionString": self.storage_connection_string,
+                **sas_secrets,
+            },
+            origin="automation",
+            purpose="storage_account_secrets",
         )

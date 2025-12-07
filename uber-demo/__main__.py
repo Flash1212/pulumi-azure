@@ -91,7 +91,7 @@ def add_secret(
     )
 
     export(
-        f"secret_{secret_name}",
+        f"{secret_name}_uri",
         secret.properties.apply(lambda p: p.secret_uri_with_version),
     )
     return secret
@@ -221,7 +221,7 @@ def define_role_assignments(
 
 def define_app_settings(
     assigned_identity: managedidentity.UserAssignedIdentity,
-    akv_secrets: dict[str, Output[str]] | None,
+    akv_secrets: dict[str, Input[str]] | None,
     storage_outputs: StorageOutputs | None,
     analytics_and_logs: AnalyticsAndLogsOutputs | None,
     event_grid_topic: eventgrid.Topic | None,
@@ -445,7 +445,7 @@ def setup_servicebus(
         resource_type="servicebus", pkl_config_file=servicebus_config_file
     )
 
-    return ServiceBus(
+    sbs = ServiceBus(
         name=prefix,
         args=ServiceBusArgs(
             location=location,
@@ -455,6 +455,10 @@ def setup_servicebus(
         ),
         opts=default_opts,
     )
+
+    export("servicebus_secrets", sbs.servicebus_secrets)
+
+    return sbs
 
 
 def setup_storage(
@@ -544,7 +548,7 @@ def setup_storage(
         for name, queue in storage_chain.storage_queues.items()
     }
     export("blob_container_endpoints", storage_blob_endpoints)
-    export("connection_string", storage_chain.storage_connection_string)
+    export("storage_secrets", storage_chain.storage_secrets)
     export("storage_account_keys", storage_chain.storage_account_keys)
     export("queue_names", storage_chain.storage_queues.keys())
 
@@ -779,25 +783,40 @@ key_vault = setup_akv(
     prefix=resource_prefix,
 )
 
-secrets: dict[str, Output[str]] = {}
-if storage_outputs and key_vault:
-    secret_name = "StorageConnectionString"
-    secret = add_secret(
-        key_vault=key_vault,
-        resource_group=resource_group,
-        secret_name=secret_name,
-        secret_value=storage_outputs.storage_chain.storage_connection_string,
-    )
-    secrets[secret_name] = Output.concat(
-        "@Microsoft.KeyVault(SecretUri=",
-        secret.properties.apply(lambda p: p.secret_uri_with_version),
-        ")",
-    )
+app_settings_secrets: dict[str, Input[str]] = {}
+secrets_dict: dict[str, Input[str]] = {}
+
+if storage_outputs and storage_outputs.storage_chain:
+    secrets_dict.update(storage_outputs.storage_chain.storage_secrets.secrets)
+
+if servicebus_outputs and servicebus_outputs.servicebus_secrets:
+    secrets_dict.update(servicebus_outputs.servicebus_secrets.secrets)
+
+if key_vault:
+    for secret_name, secret_value in secrets_dict.items():
+        secret = add_secret(
+            key_vault=key_vault,
+            resource_group=resource_group,
+            secret_name=secret_name,
+            secret_value=secret_value,
+        )
+        if "StorageConnectionString" in secret_name:
+            app_settings_secrets[secret_name] = Output.concat(
+                "@Microsoft.KeyVault(SecretUri=",
+                secret.properties.apply(lambda p: p.secret_uri_with_version),
+                ")",
+            )
+        if "ConnectionStringSecondary" in secret_name:
+            app_settings_secrets[secret_name] = Output.concat(
+                "@Microsoft.KeyVault(SecretUri=",
+                secret.properties.apply(lambda p: p.secret_uri_with_version),
+                ")",
+            )
 
 
 if func_app:
     app_settings = define_app_settings(
-        akv_secrets=secrets,
+        akv_secrets=app_settings_secrets,
         storage_outputs=storage_outputs,
         analytics_and_logs=analytics_and_logs,
         assigned_identity=assigned_identity,

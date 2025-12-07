@@ -27,7 +27,11 @@ class ServiceBus(ComponentResource):
                 Namespace.
             opts (Optional[ResourceOptions], optional): The resource options for
                 the component. Defaults to None.
-
+        Attributes:
+            servicebus_secrets (SecretsObject): List of Service Bus
+                connection strings.
+            resource_group_name (str): The name of the resource group.
+            tags (dict): Tags associated with the Service Bus.
         Returns:
             None
         """
@@ -40,10 +44,14 @@ class ServiceBus(ComponentResource):
             None,
         )
 
-        self.primary_conn_strings: list[SecretsObject] = []
+        self.servicebus_secrets = SecretsObject(
+            secrets={},
+            origin="automation",
+            purpose="servicebus_namespace_secrets",
+        )
         self.resource_group_name = args.resource_group_name
         self.tags = args.tags
-        conn_str_suffix = "-conn-str"
+        conn_str_suffix = "ConnectionString"
 
         for namespace in args.pkl_configs:
             svc_bus = asb.Namespace(
@@ -73,7 +81,7 @@ class ServiceBus(ComponentResource):
                         namespace_name=svc_bus.name,
                         rights=auth.rights,
                         parent=svc_bus,
-                        secret_name=f"{auth.name}{conn_str_suffix}",
+                        secret_name=f"{auth.name.capitalize()}Namespace{conn_str_suffix}",
                     )
 
             if namespace.topics:
@@ -86,7 +94,7 @@ class ServiceBus(ComponentResource):
                                 namespace_name=svc_bus.name,
                                 rights=auth.rights,
                                 parent=tp,
-                                secret_name=f"{auth.name}{conn_str_suffix}",
+                                secret_name=f"{auth.name.capitalize()}Topic{conn_str_suffix}",
                             )
                     if topic.subscriptions:
                         for subscription in topic.subscriptions:
@@ -115,7 +123,7 @@ class ServiceBus(ComponentResource):
                                 namespace_name=svc_bus.name,
                                 rights=auth.rights,
                                 parent=sbq,
-                                secret_name=f"{auth.name}{conn_str_suffix}",
+                                secret_name=f"{auth.name.capitalize()}Queue{conn_str_suffix}",
                             )
 
         self.register_outputs({})
@@ -305,9 +313,11 @@ class ServiceBus(ComponentResource):
 
         Args:
             name (str): The name of the authorization rule.
+            namespace_name (Output[str]): The name of the namespace.
+            parent (Queue | Topic | Namespace): The parent queue or topic
+                resource.
             rights (list[str]): The rights for the authorization rule.
-            parent (Queue | Topic): The parent queue
-                or topic resource.
+            secret_name (str): The name of the secret.
 
         Returns:
             TopicAuthorizationRule |
@@ -367,14 +377,16 @@ class ServiceBus(ComponentResource):
                 namespace_name=namespace_name,
                 resource_group_name=self.resource_group_name,
             )
-        self.primary_conn_strings.append(
-            SecretsObject(
-                secrets={
-                    secret_name: Output.secret(
-                        keys.apply(lambda k: k.primary_connection_string)
-                    )
-                },
-                origin="automation",
-                purpose="connection-strings",
-            )
+
+        primary_connection_string = Output.secret(
+            keys.apply(lambda k: k.primary_connection_string)
+        )
+        secondary_connection_string = Output.secret(
+            keys.apply(lambda k: k.secondary_connection_string)
+        )
+        self.servicebus_secrets.secrets.update(
+            {
+                f"{secret_name}Primary": primary_connection_string,
+                f"{secret_name}Secondary": secondary_connection_string,
+            }
         )
