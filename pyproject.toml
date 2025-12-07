@@ -4,8 +4,8 @@ requires-python = ">=3.10.5"
 [tool.ruff]
 # Set the maximum line length to 79.
 line-length = 80
-include = ["vm/**/*.py"]
-exclude = ["**/.venv/*", "**/generated/*"]
+include = ["**/*.py"]
+exclude = ["**/.venv*/*", "**/generated/*"]
 
 
 [tool.ruff.lint]
@@ -15,6 +15,6 @@ extend-select = ["E501"]
 [tool.pyright]
 typeCheckingMode="standard"
 include = ["**/*.py"]
-exclude = ["**/.venv/*"]
+exclude = ["**/.venv*/*"]
 venvPath = "."
 venv = ".venv"
