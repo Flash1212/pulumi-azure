@@ -7,7 +7,7 @@ config:
   uber-demo:create_event_grid: false
   uber-demo:create_function_app: true
   uber-demo:create_key_vault: true
-  uber-demo:create_log_analytics: false
+  uber-demo:create_log_analytics: true
   uber-demo:create_servicebus: true
   uber-demo:create_storage_account: true
   # Resource names and settings

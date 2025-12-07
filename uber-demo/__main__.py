@@ -384,14 +384,15 @@ def setup_roles(
         f"roleDefinitions/{role_id}"
     )
 
+    resource_name = name
     for i, identity in enumerate(identities):
         if identity.type == authorization.PrincipalType.SERVICE_PRINCIPAL:
-            name = f"Managed{name}-{i}"
+            resource_name = f"Managed{name}-{i}"
         if identity.type == authorization.PrincipalType.USER:
-            name = f"User{name}-{i}"
+            resource_name = f"User{name}-{i}"
 
         authorization.RoleAssignment(
-            resource_name=name,
+            resource_name=resource_name,
             principal_id=identity.principal_id,
             principal_type=identity.type,
             role_definition_id=role_definition_id,
@@ -660,15 +661,6 @@ servicebus_outputs = setup_servicebus(
     resource_group_name=resource_group.name,
 )
 
-analytics_and_logs = setup_anlytics_and_insights(
-    create_log_analytics=create_log_analytics,
-    create_app_insights=create_app_insights,
-    default_opts=default_opts,
-    default_tags=default_tags,
-    resource_group_name=resource_group.name,
-    prefix=resource_prefix,
-)
-
 event_grid_topic = setup_event_grid(
     create_event_grid=create_event_grid,
     default_opts=default_opts,
@@ -692,6 +684,15 @@ identities.append(
         parent=assigned_identity,
         type=authorization.PrincipalType.SERVICE_PRINCIPAL,
     ),
+)
+
+analytics_and_logs = setup_anlytics_and_insights(
+    create_log_analytics=create_log_analytics,
+    create_app_insights=create_app_insights,
+    default_opts=default_opts,
+    default_tags=default_tags,
+    resource_group_name=resource_group.name,
+    prefix=resource_prefix,
 )
 
 func_app = setup_web_app(
